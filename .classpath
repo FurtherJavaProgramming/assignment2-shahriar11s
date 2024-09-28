@@ -1,13 +1,23 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
+<<<<<<< HEAD
 	<classpathentry kind="src" path="src/main/java"/>
 	<classpathentry kind="src" path="src/main/resources"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER">
+=======
+	<classpathentry kind="src" path="src"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/JavaFX"/>
+	<classpathentry kind="con" path="org.eclipse.fx.ide.jdt.core.JAVAFX_CONTAINER">
+>>>>>>> f09cabd86c80aae9b4e4cb334df4bf74f612dd1a
 		<attributes>
 			<attribute name="module" value="true"/>
 		</attributes>
 	</classpathentry>
+<<<<<<< HEAD
 	<classpathentry kind="lib" path="D:/UNI/Sem 3/Advanced Programming/slf4j-api-1.7.36.jar"/>
 	<classpathentry kind="lib" path="D:/UNI/Sem 3/Advanced Programming/sqlite-jdbc-3.46.1.3.jar"/>
+=======
+>>>>>>> f09cabd86c80aae9b4e4cb334df4bf74f612dd1a
 	<classpathentry kind="output" path="bin"/>
 </classpath>

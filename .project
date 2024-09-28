@@ -1,6 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <projectDescription>
+<<<<<<< HEAD
 	<name>Assignment2</name>
+=======
+	<name>TheReadingRoom</name>
+>>>>>>> f09cabd86c80aae9b4e4cb334df4bf74f612dd1a
 	<comment></comment>
 	<projects>
 	</projects>
@@ -10,8 +14,19 @@
 			<arguments>
 			</arguments>
 		</buildCommand>
+<<<<<<< HEAD
 	</buildSpec>
 	<natures>
+=======
+		<buildCommand>
+			<name>org.eclipse.xtext.ui.shared.xtextBuilder</name>
+			<arguments>
+			</arguments>
+		</buildCommand>
+	</buildSpec>
+	<natures>
+		<nature>org.eclipse.xtext.ui.shared.xtextNature</nature>
+>>>>>>> f09cabd86c80aae9b4e4cb334df4bf74f612dd1a
 		<nature>org.eclipse.jdt.core.javanature</nature>
 	</natures>
 </projectDescription>
