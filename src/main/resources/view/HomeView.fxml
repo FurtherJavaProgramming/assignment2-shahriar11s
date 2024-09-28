@@ -3,31 +3,33 @@
 <?import javafx.scene.control.Menu?>
 <?import javafx.scene.control.MenuBar?>
 <?import javafx.scene.control.MenuItem?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
 <?import javafx.scene.layout.VBox?>
 
-<VBox prefHeight="450.0" prefWidth="544.0" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1">
+<VBox prefHeight="450.0" prefWidth="870.0" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1">
   <children>
     <MenuBar fx:id="menu" prefHeight="25.0" prefWidth="870.0" VBox.vgrow="NEVER">
       <menus>
-            <Menu fx:id="profile" mnemonicParsing="false" text="Profile">
-              <items>
-                <MenuItem fx:id="viewProfile" mnemonicParsing="false" text="View my profile" />
-                  <MenuItem fx:id="updateProfile" mnemonicParsing="false" text="Update my profile" />
-              </items>
-            </Menu>
+        <Menu fx:id="profile" mnemonicParsing="false" text="Profile">
+          <items>
+            <MenuItem fx:id="viewProfile" mnemonicParsing="false" text="View my profile" />
+            <MenuItem fx:id="updateProfile" mnemonicParsing="false" text="Update my profile" />
+          </items>
+        </Menu>
       </menus>
     </MenuBar>
-    
-    <!--  TableView for the functionality -->
+
+    <!-- TableView for the books -->
     <TableView fx:id="bookTable" prefHeight="400.0" prefWidth="870.0" VBox.vgrow="ALWAYS">
-    	<columns>
-    		<TableColumn fx:id="idCol" text="ID" />
-    		<TableColumn fx:id="titleCol" text="Title" />
-    		<TableColumn fx:id="authorCol" text="Author" />
-    		<TableColumn fx:id="priceCol" text="Price (AUD)" />
-    		<TableColumn fx:id="stockCol" text="Avaiable Stock" />
-    	</columns>
+      <columns>
+        <TableColumn fx:id="idCol" text="ID" />
+        <TableColumn fx:id="titleCol" text="Title" />
+        <TableColumn fx:id="authorCol" text="Author" />
+        <TableColumn fx:id="priceCol" text="Price (AUD)" />
+        <TableColumn fx:id="stockCol" text="# Physical Copies" />
+        <TableColumn fx:id="soldCol" text="# Sold Copies" />
+      </columns>
     </TableView>
-    
   </children>
 </VBox>
