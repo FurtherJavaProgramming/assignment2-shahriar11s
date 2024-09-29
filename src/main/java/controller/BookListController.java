@@ -3,6 +3,7 @@ package controller;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.TableColumn;
@@ -30,11 +31,11 @@ public class BookListController {
     private TableColumn<Book, Integer> soldCol;
 
     @FXML
-    private Button goBackBtn;  // Change to Button
+    private Button goBackBtn;
     @FXML
-    private Button addToCartBtn;  // Change to Button
+    private Button addToCartBtn;
     @FXML
-    private Button viewCartBtn;  // Change to Button
+    private Button viewCartBtn;
 
     private Stage stage;
     private Stage parentStage;
@@ -72,14 +73,25 @@ public class BookListController {
         });
 
         addToCartBtn.setOnAction(event -> {
-            System.out.println("Add to Cart clicked! (Functionality to be added)");
+            try {
+                FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/SearchBookView.fxml"));
+                SearchBookController searchBookController = new SearchBookController(new Stage(), stage);
+                loader.setController(searchBookController);
+
+                Pane root = loader.load();
+                searchBookController.showStage(root);
+                stage.hide();
+                System.out.println("Navigated to Add to Cart page.");
+            } catch (Exception e) {
+                System.out.println("Error loading SearchBookView: " + e.getMessage());
+                e.printStackTrace();
+            }
         });
 
         viewCartBtn.setOnAction(event -> {
             System.out.println("View Cart clicked! (Functionality to be added)");
         });
     }
-
 
     public void showStage(Pane root) {
         Scene scene = new Scene(root, 870, 450);  // Keep the consistent window size

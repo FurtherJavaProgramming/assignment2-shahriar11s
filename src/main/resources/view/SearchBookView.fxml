@@ -28,7 +28,7 @@
     <!-- Search Row -->
     <HBox alignment="CENTER" spacing="10" style="-fx-padding: 5;">
         <TextField fx:id="searchField" promptText="Search for a book" prefWidth="250" />
-        <Button fx:id="searchButton" text="Search" />
+        <Button fx:id="searchButton" text="Search" style="-fx-background-color: #007bff; -fx-text-fill: white;" />
     </HBox>
 
     <!-- Message label for feedback (e.g., when no books are found) -->

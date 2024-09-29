@@ -14,6 +14,7 @@ import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 import model.Book;
 import dao.BookDao;
+import javafx.fxml.FXMLLoader;
 
 public class SearchBookController {
     @FXML
@@ -98,7 +99,18 @@ public class SearchBookController {
         });
 
         listBooksBtn.setOnAction(event -> {
-            // Logic for showing all books
+            try {
+                FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/BookListView.fxml"));
+                BookListController bookListController = new BookListController(new Stage(), stage);  // Pass both stages
+                loader.setController(bookListController);
+
+                Pane root = loader.load();
+                bookListController.showStage(root);
+                stage.hide();  // Hide current stage
+            } catch (Exception e) {
+                System.out.println("Error loading BookListView: " + e.getMessage());
+                e.printStackTrace();
+            }
         });
 
         viewCartBtn.setOnAction(event -> {
@@ -111,6 +123,6 @@ public class SearchBookController {
         stage.setScene(scene);
         stage.setResizable(false);
         stage.setTitle("Add Books to Cart");
-        stage.show();
+        stage.show(); 
     }
 }
