@@ -15,6 +15,8 @@ import dao.BookDao;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Pos;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Optional;
 
 public class SearchBookController {
@@ -47,6 +49,7 @@ public class SearchBookController {
 
     private Stage stage;
     private Stage parentStage;
+    private static Map<Book, Integer> cart = new HashMap<>(); // Cart to store books and quantities
 
     public SearchBookController(Stage stage, Stage parentStage) {
         this.stage = stage;
@@ -87,13 +90,11 @@ public class SearchBookController {
         addToCartBtn.setOnAction(event -> {
             Book selectedBook = bookTable.getSelectionModel().getSelectedItem();
             if (selectedBook != null) {
+                // Create a custom dialog for quantity input
                 Dialog<Integer> dialog = new Dialog<>();
                 dialog.setTitle("Enter Quantity");
+                dialog.setGraphic(null);  // Remove the question mark icon
                 
-                // Remove the question mark from the dialog
-                dialog.setGraphic(null);
-
-                // Create the content for the custom dialog
                 GridPane grid = new GridPane();
                 grid.setHgap(10);
                 grid.setVgap(10);
@@ -126,8 +127,6 @@ public class SearchBookController {
                 });
 
                 dialog.getDialogPane().setContent(grid);
-                
-                // Add OK and Cancel buttons
                 ButtonType okButtonType = new ButtonType("OK", ButtonBar.ButtonData.OK_DONE);
                 dialog.getDialogPane().getButtonTypes().addAll(okButtonType, ButtonType.CANCEL);
 
@@ -145,7 +144,29 @@ public class SearchBookController {
                 Optional<Integer> result = dialog.showAndWait();
                 result.ifPresent(quantity -> {
                     if (quantity > 0) {
-                        System.out.println("Added " + quantity + " copies of " + selectedBook.getTitle() + " to the cart.");
+                        // Check if enough stock is available
+                        if (selectedBook.getStock() >= quantity) {
+                            // Reduce the stock of the book
+                            selectedBook.setStock(selectedBook.getStock() - quantity);
+                            bookTable.refresh(); // Refresh the table to show updated stock
+
+                            // Add book and quantity to the cart
+                            cart.put(selectedBook, cart.getOrDefault(selectedBook, 0) + quantity);
+
+                            // Show success message
+                            Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                            alert.setTitle("Success");
+                            alert.setHeaderText(null);
+                            alert.setContentText(quantity + " copies of " + selectedBook.getTitle() + " have been added to your cart.");
+                            alert.showAndWait();
+                        } else {
+                            // Not enough stock
+                            Alert alert = new Alert(Alert.AlertType.ERROR);
+                            alert.setTitle("Insufficient Stock");
+                            alert.setHeaderText(null);
+                            alert.setContentText("There are only " + selectedBook.getStock() + " copies of " + selectedBook.getTitle() + " available.");
+                            alert.showAndWait();
+                        }
                     } else {
                         System.out.println("Invalid quantity entered.");
                     }
@@ -177,8 +198,24 @@ public class SearchBookController {
         });
 
         viewCartBtn.setOnAction(event -> {
-            // Logic for viewing the cart
+            // Call method to show cart view
+            showCartView();
         });
+    }
+
+    private void showCartView() {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/CartView.fxml"));
+            CartController cartController = new CartController(new Stage(), stage, cart);  // Pass cart details
+            loader.setController(cartController);
+
+            Pane root = loader.load();
+            cartController.showStage(root);
+            stage.hide();  // Hide current stage
+        } catch (Exception e) {
+            System.out.println("Error loading CartView: " + e.getMessage());
+            e.printStackTrace();
+        }
     }
 
     public void showStage(Pane root) {
