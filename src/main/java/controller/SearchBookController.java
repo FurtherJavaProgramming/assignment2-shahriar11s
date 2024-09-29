@@ -4,17 +4,18 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.layout.GridPane;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 import model.Book;
 import dao.BookDao;
 import javafx.fxml.FXMLLoader;
+import javafx.geometry.Pos;
+
+import java.util.Optional;
 
 public class SearchBookController {
     @FXML
@@ -82,11 +83,73 @@ public class SearchBookController {
             }
         });
 
-        // Add to cart button action
+        // Add to cart button action with custom quantity dialog
         addToCartBtn.setOnAction(event -> {
             Book selectedBook = bookTable.getSelectionModel().getSelectedItem();
             if (selectedBook != null) {
-                System.out.println("Added to cart: " + selectedBook.getTitle());
+                Dialog<Integer> dialog = new Dialog<>();
+                dialog.setTitle("Enter Quantity");
+                
+                // Remove the question mark from the dialog
+                dialog.setGraphic(null);
+
+                // Create the content for the custom dialog
+                GridPane grid = new GridPane();
+                grid.setHgap(10);
+                grid.setVgap(10);
+                grid.setAlignment(Pos.CENTER);
+
+                Label bookTitle = new Label("Add " + selectedBook.getTitle() + " to Cart");
+                bookTitle.setStyle("-fx-font-weight: bold;");
+                grid.add(bookTitle, 0, 0, 2, 1);  // span 2 columns
+
+                // Create quantity input with increase/decrease buttons
+                TextField quantityField = new TextField("1");
+                Button increaseBtn = new Button("+");
+                Button decreaseBtn = new Button("-");
+
+                HBox quantityBox = new HBox(5, decreaseBtn, quantityField, increaseBtn);
+                quantityBox.setAlignment(Pos.CENTER);
+                grid.add(quantityBox, 0, 1, 2, 1);  // span 2 columns
+
+                // Increment and decrement buttons logic
+                increaseBtn.setOnAction(e -> {
+                    int currentQuantity = Integer.parseInt(quantityField.getText());
+                    quantityField.setText(String.valueOf(currentQuantity + 1));
+                });
+
+                decreaseBtn.setOnAction(e -> {
+                    int currentQuantity = Integer.parseInt(quantityField.getText());
+                    if (currentQuantity > 1) {
+                        quantityField.setText(String.valueOf(currentQuantity - 1));
+                    }
+                });
+
+                dialog.getDialogPane().setContent(grid);
+                
+                // Add OK and Cancel buttons
+                ButtonType okButtonType = new ButtonType("OK", ButtonBar.ButtonData.OK_DONE);
+                dialog.getDialogPane().getButtonTypes().addAll(okButtonType, ButtonType.CANCEL);
+
+                dialog.setResultConverter(dialogButton -> {
+                    if (dialogButton == okButtonType) {
+                        try {
+                            return Integer.parseInt(quantityField.getText());
+                        } catch (NumberFormatException e) {
+                            System.out.println("Invalid input: Please enter a valid number.");
+                        }
+                    }
+                    return null;
+                });
+
+                Optional<Integer> result = dialog.showAndWait();
+                result.ifPresent(quantity -> {
+                    if (quantity > 0) {
+                        System.out.println("Added " + quantity + " copies of " + selectedBook.getTitle() + " to the cart.");
+                    } else {
+                        System.out.println("Invalid quantity entered.");
+                    }
+                });
             } else {
                 System.out.println("No book selected.");
             }
@@ -123,6 +186,6 @@ public class SearchBookController {
         stage.setScene(scene);
         stage.setResizable(false);
         stage.setTitle("Add Books to Cart");
-        stage.show(); 
+        stage.show();
     }
 }
