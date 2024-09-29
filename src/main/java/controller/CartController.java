@@ -72,7 +72,7 @@ public class CartController {
             // Logic to go back to the list of books
             try {
                 FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/BookListView.fxml"));
-                BookListController bookListController = new BookListController(new Stage(), stage);
+                BookListController bookListController = new BookListController(new Stage(), stage, cart); // Add cart parameter here
                 loader.setController(bookListController);
 
                 Pane root = loader.load();
@@ -88,7 +88,7 @@ public class CartController {
             // Logic to go back to Add to Cart page
             try {
                 FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/SearchBookView.fxml"));
-                SearchBookController searchBookController = new SearchBookController(new Stage(), stage);
+                SearchBookController searchBookController = new SearchBookController(new Stage(), stage, cart); // Add cart parameter here
                 loader.setController(searchBookController);
 
                 Pane root = loader.load();

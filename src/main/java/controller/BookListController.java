@@ -14,6 +14,8 @@ import javafx.stage.Stage;
 import model.Book;
 import dao.BookDao;
 
+import java.util.Map;
+
 public class BookListController {
     @FXML
     private TableView<Book> bookTable;
@@ -39,10 +41,12 @@ public class BookListController {
 
     private Stage stage;
     private Stage parentStage;
+    private Map<Book, Integer> cart;  // Cart
 
-    public BookListController(Stage stage, Stage parentStage) {
+    public BookListController(Stage stage, Stage parentStage, Map<Book, Integer> cart) {  // Constructor with cart
         this.stage = stage;
         this.parentStage = parentStage;
+        this.cart = cart;
     }
 
     @FXML
@@ -59,29 +63,21 @@ public class BookListController {
         ObservableList<Book> bookList = FXCollections.observableArrayList(BookDao.getAllBooks());
         bookTable.setItems(bookList);
 
-        // Set the height dynamically based on the number of items in the table
-        bookTable.setFixedCellSize(25);
-        bookTable.prefHeightProperty().bind(bookTable.fixedCellSizeProperty().multiply(bookTable.getItems().size() + 1.01));
-        bookTable.minHeightProperty().bind(bookTable.prefHeightProperty());
-        bookTable.maxHeightProperty().bind(bookTable.prefHeightProperty());
-
         // Button actions
         goBackBtn.setOnAction(event -> {
             parentStage.show();  // Show the parent (home) stage
             stage.close();  // Close the current book list page
-            System.out.println("Navigated back to home.");
         });
 
         addToCartBtn.setOnAction(event -> {
             try {
                 FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/SearchBookView.fxml"));
-                SearchBookController searchBookController = new SearchBookController(new Stage(), stage);
+                SearchBookController searchBookController = new SearchBookController(new Stage(), stage, cart);  // Pass cart
                 loader.setController(searchBookController);
 
                 Pane root = loader.load();
                 searchBookController.showStage(root);
                 stage.hide();
-                System.out.println("Navigated to Add to Cart page.");
             } catch (Exception e) {
                 System.out.println("Error loading SearchBookView: " + e.getMessage());
                 e.printStackTrace();
@@ -89,12 +85,23 @@ public class BookListController {
         });
 
         viewCartBtn.setOnAction(event -> {
-            System.out.println("View Cart clicked! (Functionality to be added)");
+            try {
+                FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/CartView.fxml"));
+                CartController cartController = new CartController(new Stage(), stage, cart);  // Pass cart
+                loader.setController(cartController);
+
+                Pane root = loader.load();
+                cartController.showStage(root);
+                stage.hide();  // Hide current stage
+            } catch (Exception e) {
+                System.out.println("Error loading CartView: " + e.getMessage());
+                e.printStackTrace();
+            }
         });
     }
 
     public void showStage(Pane root) {
-        Scene scene = new Scene(root, 870, 450);  // Keep the consistent window size
+        Scene scene = new Scene(root, 870, 450);  // Consistent window size
         stage.setScene(scene);
         stage.setResizable(false);
         stage.setTitle("List of Books");

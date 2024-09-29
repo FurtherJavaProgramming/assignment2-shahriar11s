@@ -15,7 +15,6 @@ import dao.BookDao;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Pos;
 
-import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 
@@ -49,11 +48,13 @@ public class SearchBookController {
 
     private Stage stage;
     private Stage parentStage;
-    private static Map<Book, Integer> cart = new HashMap<>(); // Cart to store books and quantities
+    private Map<Book, Integer> cart;  // Cart to store books and quantities
 
-    public SearchBookController(Stage stage, Stage parentStage) {
+    // Constructor that accepts Stage, parentStage, and Map<Book, Integer>
+    public SearchBookController(Stage stage, Stage parentStage, Map<Book, Integer> cart) {
         this.stage = stage;
         this.parentStage = parentStage;
+        this.cart = cart;  // Initialize cart
     }
 
     @FXML
@@ -90,11 +91,11 @@ public class SearchBookController {
         addToCartBtn.setOnAction(event -> {
             Book selectedBook = bookTable.getSelectionModel().getSelectedItem();
             if (selectedBook != null) {
-                // Create a custom dialog for quantity input
+                // Custom dialog for quantity input
                 Dialog<Integer> dialog = new Dialog<>();
                 dialog.setTitle("Enter Quantity");
                 dialog.setGraphic(null);  // Remove the question mark icon
-                
+
                 GridPane grid = new GridPane();
                 grid.setHgap(10);
                 grid.setVgap(10);
@@ -102,7 +103,7 @@ public class SearchBookController {
 
                 Label bookTitle = new Label("Add " + selectedBook.getTitle() + " to Cart");
                 bookTitle.setStyle("-fx-font-weight: bold;");
-                grid.add(bookTitle, 0, 0, 2, 1);  // span 2 columns
+                grid.add(bookTitle, 0, 0, 2, 1);  // Span 2 columns
 
                 // Create quantity input with increase/decrease buttons
                 TextField quantityField = new TextField("1");
@@ -111,7 +112,7 @@ public class SearchBookController {
 
                 HBox quantityBox = new HBox(5, decreaseBtn, quantityField, increaseBtn);
                 quantityBox.setAlignment(Pos.CENTER);
-                grid.add(quantityBox, 0, 1, 2, 1);  // span 2 columns
+                grid.add(quantityBox, 0, 1, 2, 1);  // Span 2 columns
 
                 // Increment and decrement buttons logic
                 increaseBtn.setOnAction(e -> {
@@ -185,7 +186,7 @@ public class SearchBookController {
         listBooksBtn.setOnAction(event -> {
             try {
                 FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/BookListView.fxml"));
-                BookListController bookListController = new BookListController(new Stage(), stage);  // Pass both stages
+                BookListController bookListController = new BookListController(new Stage(), stage, cart);  // Pass both stages and cart
                 loader.setController(bookListController);
 
                 Pane root = loader.load();

@@ -2,6 +2,8 @@ package controller;
 
 import java.io.IOException;
 import java.sql.SQLException;
+import java.util.HashMap;
+import java.util.Map;
 
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -15,6 +17,7 @@ import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 import model.Model;
 import model.User;
+import model.Book;  // Import Book model
 
 public class LoginController {
     @FXML
@@ -30,10 +33,12 @@ public class LoginController {
 
     private Model model;
     private Stage stage;
+    private Map<Book, Integer> cart;  // Cart to be passed to HomeController
 
     public LoginController(Stage stage, Model model) {
         this.stage = stage;
         this.model = model;
+        this.cart = new HashMap<>();  // Initialize an empty cart
     }
 
     @FXML
@@ -49,7 +54,9 @@ public class LoginController {
                         try {
                             System.out.println("Loading HomeView.fxml...");  // Debugging print
                             FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/HomeView.fxml"));
-                            HomeController homeController = new HomeController(stage, model);
+                            
+                            // Pass cart to HomeController along with stage and model
+                            HomeController homeController = new HomeController(stage, model, cart);
                             loader.setController(homeController);
                             
                             VBox root = loader.load();  // Ensure this matches the root layout in the FXML

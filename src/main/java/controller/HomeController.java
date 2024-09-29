@@ -9,6 +9,9 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.MenuItem;
 import model.Model;
+import model.Book;
+
+import java.util.Map;
 
 public class HomeController {
     @FXML
@@ -32,10 +35,12 @@ public class HomeController {
 
     private Stage stage;
     private Model model;
+    private Map<Book, Integer> cart;  // Cart map
 
-    public HomeController(Stage stage, Model model) {
+    public HomeController(Stage stage, Model model, Map<Book, Integer> cart) {
         this.stage = stage;
         this.model = model;
+        this.cart = cart;  // Initialize the cart map
     }
 
     @FXML
@@ -46,7 +51,7 @@ public class HomeController {
         listBooksBtn.setOnAction(event -> {
             try {
                 FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/BookListView.fxml"));
-                BookListController bookListController = new BookListController(new Stage(), stage);  // Pass both stages
+                BookListController bookListController = new BookListController(new Stage(), stage, cart);  // Pass both stages and the cart
                 loader.setController(bookListController);
 
                 Pane root = loader.load();
@@ -63,7 +68,7 @@ public class HomeController {
         addBookBtn.setOnAction(event -> {
             try {
                 FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/SearchBookView.fxml"));
-                SearchBookController searchBookController = new SearchBookController(new Stage(), stage);  // Set controller in code
+                SearchBookController searchBookController = new SearchBookController(new Stage(), stage, cart);  // Pass cart here as well
                 loader.setController(searchBookController);
                 
                 Pane root = loader.load();
@@ -71,6 +76,22 @@ public class HomeController {
                 stage.hide();  // Hide home stage
             } catch (Exception e) {
                 System.out.println("Error loading SearchBookView: " + e.getMessage());
+                e.printStackTrace();
+            }
+        });
+
+        // View Cart button action
+        viewCartBtn.setOnAction(event -> {
+            try {
+                FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/CartView.fxml"));
+                CartController cartController = new CartController(new Stage(), stage, cart);  // Pass cart
+                loader.setController(cartController);
+
+                Pane root = loader.load();
+                cartController.showStage(root);
+                stage.hide();
+            } catch (Exception e) {
+                System.out.println("Error loading CartView: " + e.getMessage());
                 e.printStackTrace();
             }
         });
@@ -83,6 +104,6 @@ public class HomeController {
         stage.setScene(scene);
         stage.setResizable(false);
         stage.setTitle("Home");
-        stage.show();
+        stage.show(); 
     }
 }
