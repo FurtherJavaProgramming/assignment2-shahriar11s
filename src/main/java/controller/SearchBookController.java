@@ -40,6 +40,8 @@ public class SearchBookController {
     @FXML
     private Button goBackBtn; // Button to go back
     @FXML
+    private Button homeBtn;   // Home button
+    @FXML
     private Button listBooksBtn; // Button to list all books
     @FXML
     private Button viewCartBtn; // Button to view cart
@@ -183,6 +185,21 @@ public class SearchBookController {
             stage.close();
         });
 
+        homeBtn.setOnAction(event -> {
+            try {
+                FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/HomeView.fxml"));
+                HomeController homeController = new HomeController(new Stage(), null, cart);  // Redirect to Home
+                loader.setController(homeController);
+
+                Pane root = loader.load();
+                homeController.showStage(root);
+                stage.close();
+            } catch (Exception e) {
+                System.out.println("Error loading HomeView: " + e.getMessage());
+                e.printStackTrace();
+            }
+        });
+
         listBooksBtn.setOnAction(event -> {
             try {
                 FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/BookListView.fxml"));
@@ -199,7 +216,6 @@ public class SearchBookController {
         });
 
         viewCartBtn.setOnAction(event -> {
-            // Call method to show cart view
             showCartView();
         });
     }

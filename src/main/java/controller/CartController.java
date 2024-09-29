@@ -20,9 +20,13 @@ public class CartController {
     @FXML
     private TableColumn<Book, String> titleCol;
     @FXML
+    private TableColumn<Book, String> authorCol;
+    @FXML
     private TableColumn<Book, Integer> quantityCol;
     @FXML
     private TableColumn<Book, Double> priceCol;
+    @FXML
+    private TableColumn<Book, Void> actionCol; // New column for delete action
     @FXML
     private Button goBackBtn;
     @FXML
@@ -31,6 +35,8 @@ public class CartController {
     private Button addToCartBtn;
     @FXML
     private Button checkoutBtn;
+    @FXML
+    private Button homeBtn;  // Home button
     @FXML
     private Label totalPriceLabel;
 
@@ -48,6 +54,7 @@ public class CartController {
     public void initialize() {
         // Set up table columns
         titleCol.setCellValueFactory(new PropertyValueFactory<>("title"));
+        authorCol.setCellValueFactory(new PropertyValueFactory<>("author"));
         quantityCol.setCellValueFactory(cellData -> {
             Book book = cellData.getValue();
             return new javafx.beans.property.SimpleObjectProperty<>(cart.get(book));
@@ -57,6 +64,9 @@ public class CartController {
         // Populate the cart table
         ObservableList<Book> cartItems = FXCollections.observableArrayList(cart.keySet());
         cartTable.setItems(cartItems);
+
+        // Add action column for delete button
+        addDeleteButtonToTable();
 
         // Calculate and display total price
         double totalPrice = calculateTotalPrice();
@@ -108,14 +118,65 @@ public class CartController {
             alert.setContentText("Proceeding to checkout!");
             alert.showAndWait();
         });
+
+        homeBtn.setOnAction(event -> {
+            try {
+                FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/HomeView.fxml"));
+                HomeController homeController = new HomeController(new Stage(), null, cart);  // Redirect to Home
+                loader.setController(homeController);
+
+                Pane root = loader.load();
+                homeController.showStage(root);
+                stage.close();
+            } catch (Exception e) {
+                System.out.println("Error loading HomeView: " + e.getMessage());
+                e.printStackTrace();
+            }
+        });
     }
 
+    // Calculate total price of cart items
     private double calculateTotalPrice() {
         double total = 0.0;
         for (Map.Entry<Book, Integer> entry : cart.entrySet()) {
             total += entry.getKey().getPrice() * entry.getValue();
         }
         return total;
+    }
+
+    // Add a delete button to each row of the cart table
+    private void addDeleteButtonToTable() {
+        actionCol.setCellFactory(param -> new TableCell<>() {
+            private final Button deleteButton = new Button("Delete");
+
+            {
+                deleteButton.setStyle("-fx-background-color: red; -fx-text-fill: white;");  // Red button style
+                deleteButton.setOnAction(event -> {
+                    Book book = getTableView().getItems().get(getIndex());
+
+                    // Increase the stock of the book when removed from the cart
+                    int quantityInCart = cart.get(book);
+                    book.setStock(book.getStock() + quantityInCart);
+
+                    // Remove the book from the cart
+                    cart.remove(book);
+
+                    // Refresh the table and update the total price
+                    cartTable.getItems().remove(book);
+                    totalPriceLabel.setText(calculateTotalPrice() + " AUD");
+                });
+            }
+
+            @Override
+            protected void updateItem(Void item, boolean empty) {
+                super.updateItem(item, empty);
+                if (empty) {
+                    setGraphic(null);
+                } else {
+                    setGraphic(deleteButton);
+                }
+            }
+        });
     }
 
     public void showStage(Pane root) {

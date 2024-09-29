@@ -13,7 +13,6 @@ import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 import model.Book;
 import dao.BookDao;
-
 import java.util.Map;
 
 public class BookListController {
@@ -34,6 +33,8 @@ public class BookListController {
 
     @FXML
     private Button goBackBtn;
+    @FXML
+    private Button homeBtn;   // Home button
     @FXML
     private Button addToCartBtn;
     @FXML
@@ -67,6 +68,21 @@ public class BookListController {
         goBackBtn.setOnAction(event -> {
             parentStage.show();  // Show the parent (home) stage
             stage.close();  // Close the current book list page
+        });
+
+        homeBtn.setOnAction(event -> {
+            try {
+                FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/HomeView.fxml"));
+                HomeController homeController = new HomeController(new Stage(), null, cart);  // Redirect to Home
+                loader.setController(homeController);
+                
+                Pane root = loader.load();
+                homeController.showStage(root);
+                stage.close();
+            } catch (Exception e) {
+                System.out.println("Error loading HomeView: " + e.getMessage());
+                e.printStackTrace();
+            }
         });
 
         addToCartBtn.setOnAction(event -> {
