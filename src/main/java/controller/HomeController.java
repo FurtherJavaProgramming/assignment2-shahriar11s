@@ -47,17 +47,19 @@ public class HomeController {
         listBooksBtn.setOnAction(event -> {
             try {
                 FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/BookListView.fxml"));
-                BookListController bookListController = new BookListController(stage);
+                BookListController bookListController = new BookListController(new Stage(), stage);  // Pass both stages
                 loader.setController(bookListController);
 
                 VBox root = loader.load();
                 bookListController.showStage(root);
-                System.out.println("Book list page shown.");  // Debugging print
+                stage.hide();  // Hide home stage
+                System.out.println("Book list page shown.");
             } catch (Exception e) {
                 System.out.println("Error loading BookListView: " + e.getMessage());
-                e.printStackTrace();  // Debugging print
+                e.printStackTrace();
             }
         });
+
 
         quitBtn.setOnAction(event -> stage.close());  // Close only when the Quit button is pressed
     }
