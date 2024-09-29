@@ -3,6 +3,7 @@ package dao;
 import model.Book;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class BookDao {
     private static List<Book> books = new ArrayList<>();
@@ -21,5 +22,13 @@ public class BookDao {
 
     public static List<Book> getAllBooks() {
         return books;
+    }
+
+    // Method to search for books by keyword (matches title or author)
+    public static List<Book> searchBooks(String keyword) {
+        return books.stream()
+                .filter(book -> book.getTitle().toLowerCase().contains(keyword.toLowerCase()) ||
+                                book.getAuthor().toLowerCase().contains(keyword.toLowerCase()))
+                .collect(Collectors.toList());
     }
 }

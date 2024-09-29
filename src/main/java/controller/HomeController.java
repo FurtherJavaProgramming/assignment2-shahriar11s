@@ -2,7 +2,6 @@ package controller;
 
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
-import javafx.scene.layout.VBox;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 import javafx.fxml.FXML;
@@ -50,7 +49,7 @@ public class HomeController {
                 BookListController bookListController = new BookListController(new Stage(), stage);  // Pass both stages
                 loader.setController(bookListController);
 
-                VBox root = loader.load();
+                Pane root = loader.load();
                 bookListController.showStage(root);
                 stage.hide();  // Hide home stage
                 System.out.println("Book list page shown.");
@@ -60,6 +59,21 @@ public class HomeController {
             }
         });
 
+        // Add to Cart button action (loading SearchBookView.fxml)
+        addBookBtn.setOnAction(event -> {
+            try {
+                FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/SearchBookView.fxml"));
+                SearchBookController searchBookController = new SearchBookController(new Stage(), stage);  // Set controller in code
+                loader.setController(searchBookController);
+                
+                Pane root = loader.load();
+                searchBookController.showStage(root);
+                stage.hide();  // Hide home stage
+            } catch (Exception e) {
+                System.out.println("Error loading SearchBookView: " + e.getMessage());
+                e.printStackTrace();
+            }
+        });
 
         quitBtn.setOnAction(event -> stage.close());  // Close only when the Quit button is pressed
     }

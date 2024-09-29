@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.geometry.Pos?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+
+<VBox alignment="TOP_CENTER" spacing="10" xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml">
+    <padding>
+        <Insets top="10" bottom="20" left="20" right="20"/>
+    </padding>
+
+    <!-- Buttons Row -->
+    <HBox alignment="CENTER_LEFT" spacing="10" prefWidth="870.0">
+        <Button fx:id="goBackBtn" text="Go Back" />
+        <!-- Spacer for pushing buttons to the right -->
+        <HBox alignment="CENTER_RIGHT" spacing="10" HBox.hgrow="ALWAYS">
+            <Button fx:id="listBooksBtn" text="List All Books" />
+            <Button fx:id="viewCartBtn" text="View Cart" />
+        </HBox>
+    </HBox>
+
+    <!-- Search Row -->
+    <HBox alignment="CENTER" spacing="10" style="-fx-padding: 5;">
+        <TextField fx:id="searchField" promptText="Search for a book" prefWidth="250" />
+        <Button fx:id="searchButton" text="Search" />
+    </HBox>
+
+    <!-- Message label for feedback (e.g., when no books are found) -->
+    <Label fx:id="messageLabel" text="" style="-fx-text-fill: red;" alignment="CENTER" />
+
+    <!-- Table for showing search results -->
+    <TableView fx:id="bookTable" VBox.vgrow="ALWAYS">
+        <columns>
+            <TableColumn fx:id="idCol" text="ID" prefWidth="60.0" />
+            <TableColumn fx:id="titleCol" text="Title" prefWidth="290.0" />
+            <TableColumn fx:id="authorCol" text="Author" prefWidth="210.0" />
+            <TableColumn fx:id="priceCol" text="Price (AUD)" prefWidth="115.0" />
+            <TableColumn fx:id="stockCol" text="Available Stock" prefWidth="150" />
+        </columns>
+    </TableView>
+
+    <!-- Add to Cart Button -->
+    <HBox alignment="CENTER" spacing="10" style="-fx-padding: 10;">
+        <Button fx:id="addToCartBtn" text="Add to Cart" style="-fx-background-color: green; -fx-text-fill: white;" />
+    </HBox>
+</VBox>
