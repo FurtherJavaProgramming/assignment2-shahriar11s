@@ -1,68 +1,65 @@
 package controller;
 
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.Scene;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.control.MenuItem;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
-import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
-import model.Book;
 import model.Model;
-import dao.BookDao;
 
 public class HomeController {
-    private Model model;
-    private Stage stage;
-    private Stage parentStage;
-
     @FXML
-    private MenuItem viewProfile; 
+    private Label welcomeLabel;  
+    @FXML
+    private MenuItem viewProfile;
     @FXML
     private MenuItem updateProfile;
+    @FXML
+    private Button addBookBtn;
+    @FXML
+    private Button viewCartBtn;
+    @FXML
+    private Button removeBookBtn;
+    @FXML
+    private Button checkoutBtn;
+    @FXML
+    private Button listBooksBtn;
+    @FXML
+    private Button quitBtn;
 
-    @FXML
-    private TableView<Book> bookTable; 
-    @FXML
-    private TableColumn<Book, Integer> idCol;
-    @FXML
-    private TableColumn<Book, String> titleCol;
-    @FXML
-    private TableColumn<Book, String> authorCol;
-    @FXML
-    private TableColumn<Book, Double> priceCol;
-    @FXML
-    private TableColumn<Book, Integer> stockCol;
-    @FXML
-    private TableColumn<Book, Integer> soldCol;
+    private Stage stage;
+    private Model model;
 
-    public HomeController(Stage parentStage, Model model) {
-        this.stage = new Stage();
-        this.parentStage = parentStage;
+    public HomeController(Stage stage, Model model) {
+        this.stage = stage;
         this.model = model;
     }
 
     @FXML
     public void initialize() {
-        idCol.setCellValueFactory(new PropertyValueFactory<>("id"));
-        titleCol.setCellValueFactory(new PropertyValueFactory<>("title"));
-        authorCol.setCellValueFactory(new PropertyValueFactory<>("author"));
-        priceCol.setCellValueFactory(new PropertyValueFactory<>("price"));
-        stockCol.setCellValueFactory(new PropertyValueFactory<>("stock"));
-        soldCol.setCellValueFactory(new PropertyValueFactory<>("sold"));
+        welcomeLabel.setText("Welcome to The Reading Room Bookstore!");
 
-        ObservableList<Book> bookList = FXCollections.observableArrayList(BookDao.getAllBooks());
-        bookTable.setItems(bookList);
+        addBookBtn.setOnAction(event -> System.out.println("Add Book to Cart clicked!"));
+        viewCartBtn.setOnAction(event -> System.out.println("View Shopping Cart clicked!"));
+        removeBookBtn.setOnAction(event -> System.out.println("Remove Book from Cart clicked!"));
+        checkoutBtn.setOnAction(event -> System.out.println("Checkout clicked!"));
+        listBooksBtn.setOnAction(event -> System.out.println("List All Books clicked!"));
+        quitBtn.setOnAction(event -> stage.close());  // Close only when the Quit button is pressed
     }
 
     public void showStage(Pane root) {
-        Scene scene = new Scene(root, 870, 450);
-        stage.setScene(scene);
-        stage.setResizable(false);
-        stage.setTitle("Home");
-        stage.show();
+        try {
+            Scene scene = new Scene(root, 870, 450);
+            stage.setScene(scene);
+            stage.setResizable(false);
+            stage.setTitle("Home");
+            stage.show();
+            System.out.println("Home stage is shown successfully.");  // Debugging print
+        } catch (Exception e) {
+            System.out.println("Error showing the home stage: " + e.getMessage());
+            e.printStackTrace();  // Print any errors to the console
+        }
     }
 }
