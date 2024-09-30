@@ -11,6 +11,7 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 import model.Book;
+import model.Model;
 
 import java.util.Map;
 
@@ -43,9 +44,10 @@ public class CartController {
 
     private Stage stage;
     private Stage parentStage;
+    private Model model;
     private Map<Book, Integer> cart;  // Cart to store books and quantities
 
-    public CartController(Stage stage, Stage parentStage, Map<Book, Integer> cart) {
+    public CartController(Stage stage, Stage parentStage, Model model, Map<Book, Integer> cart) {
         this.stage = stage;
         this.parentStage = parentStage;
         this.cart = cart;
@@ -79,7 +81,7 @@ public class CartController {
         listBooksBtn.setOnAction(event -> {
             try {
                 FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/BookListView.fxml"));
-                BookListController bookListController = new BookListController(new Stage(), stage, cart); // Add cart parameter here
+                BookListController bookListController = new BookListController(new Stage(), stage, model, cart); // Add cart parameter here
                 loader.setController(bookListController);
 
                 Pane root = loader.load();
@@ -94,7 +96,7 @@ public class CartController {
         addToCartBtn.setOnAction(event -> {
             try {
                 FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/SearchBookView.fxml"));
-                SearchBookController searchBookController = new SearchBookController(new Stage(), stage, cart); // Add cart parameter here
+                SearchBookController searchBookController = new SearchBookController(new Stage(), stage, model, cart); // Add cart parameter here
                 loader.setController(searchBookController);
 
                 Pane root = loader.load();
@@ -118,17 +120,18 @@ public class CartController {
         homeBtn.setOnAction(event -> {
             try {
                 FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/HomeView.fxml"));
-                HomeController homeController = new HomeController(new Stage(), null, cart);  // Redirect to Home
+                HomeController homeController = new HomeController(stage, this.model, this.cart);
                 loader.setController(homeController);
-
+                
                 Pane root = loader.load();
                 homeController.showStage(root);
-                stage.close();
             } catch (Exception e) {
                 System.out.println("Error loading HomeView: " + e.getMessage());
                 e.printStackTrace();
             }
         });
+
+
     }
 
     // Calculate total price of cart items

@@ -12,8 +12,8 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
-import javafx.scene.layout.VBox;
 import javafx.scene.layout.Pane;
+import javafx.scene.layout.BorderPane; // Update here
 import javafx.stage.Stage;
 import model.Model;
 import model.User;
@@ -59,7 +59,7 @@ public class LoginController {
                             HomeController homeController = new HomeController(stage, model, cart);
                             loader.setController(homeController);
                             
-                            VBox root = loader.load();  // Ensure this matches the root layout in the FXML
+                            BorderPane root = loader.load();  // BorderPane instead of VBox
                             System.out.println("HomeView loaded successfully.");  // Debugging print
                             homeController.showStage(root);  // Pass the root to the showStage method
                             

@@ -31,4 +31,12 @@ public class BookDao {
                                 book.getAuthor().toLowerCase().contains(keyword.toLowerCase()))
                 .collect(Collectors.toList());
     }
+
+    // Method to get the top 5 books based on the number of sold copies
+    public static List<Book> getTopBooks(int limit) {
+        return books.stream()
+                .sorted((b1, b2) -> Integer.compare(b2.getSold(), b1.getSold()))
+                .limit(limit)
+                .collect(Collectors.toList());
+    }
 }

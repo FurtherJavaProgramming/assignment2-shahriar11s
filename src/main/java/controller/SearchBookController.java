@@ -11,6 +11,7 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 import model.Book;
+import model.Model;
 import dao.BookDao;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Pos;
@@ -50,12 +51,14 @@ public class SearchBookController {
 
     private Stage stage;
     private Stage parentStage;
+    private Model model;
     private Map<Book, Integer> cart;  // Cart to store books and quantities
 
     // Constructor that accepts Stage, parentStage, and Map<Book, Integer>
-    public SearchBookController(Stage stage, Stage parentStage, Map<Book, Integer> cart) {
+    public SearchBookController(Stage stage, Stage parentStage, Model model, Map<Book, Integer> cart) {
         this.stage = stage;
         this.parentStage = parentStage;
+        this.model = model;
         this.cart = cart;  // Initialize cart
     }
 
@@ -188,22 +191,23 @@ public class SearchBookController {
         homeBtn.setOnAction(event -> {
             try {
                 FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/HomeView.fxml"));
-                HomeController homeController = new HomeController(new Stage(), null, cart);  // Redirect to Home
+                HomeController homeController = new HomeController(stage, this.model, this.cart);
                 loader.setController(homeController);
-
+                
                 Pane root = loader.load();
                 homeController.showStage(root);
-                stage.close();
             } catch (Exception e) {
                 System.out.println("Error loading HomeView: " + e.getMessage());
                 e.printStackTrace();
             }
         });
 
+
+
         listBooksBtn.setOnAction(event -> {
             try {
                 FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/BookListView.fxml"));
-                BookListController bookListController = new BookListController(new Stage(), stage, cart);  // Pass both stages and cart
+                BookListController bookListController = new BookListController(new Stage(), stage, model, cart);  // Pass both stages and cart
                 loader.setController(bookListController);
 
                 Pane root = loader.load();
@@ -223,7 +227,7 @@ public class SearchBookController {
     private void showCartView() {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/CartView.fxml"));
-            CartController cartController = new CartController(new Stage(), stage, cart);  // Pass cart details
+            CartController cartController = new CartController(new Stage(), stage, model, cart);  // Pass cart details
             loader.setController(cartController);
 
             Pane root = loader.load();

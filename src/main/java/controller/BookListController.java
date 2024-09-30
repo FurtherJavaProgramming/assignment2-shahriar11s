@@ -12,7 +12,9 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 import model.Book;
+import model.Model;
 import dao.BookDao;
+
 import java.util.Map;
 
 public class BookListController {
@@ -34,7 +36,7 @@ public class BookListController {
     @FXML
     private Button goBackBtn;
     @FXML
-    private Button homeBtn;   // Home button
+    private Button homeBtn;
     @FXML
     private Button addToCartBtn;
     @FXML
@@ -42,9 +44,10 @@ public class BookListController {
 
     private Stage stage;
     private Stage parentStage;
-    private Map<Book, Integer> cart;  // Cart
+    private Model model;
+    private Map<Book, Integer> cart;
 
-    public BookListController(Stage stage, Stage parentStage, Map<Book, Integer> cart) {  // Constructor with cart
+    public BookListController(Stage stage, Stage parentStage, Model model, Map<Book, Integer> cart) {
         this.stage = stage;
         this.parentStage = parentStage;
         this.cart = cart;
@@ -66,29 +69,30 @@ public class BookListController {
 
         // Button actions
         goBackBtn.setOnAction(event -> {
-            parentStage.show();  // Show the parent (home) stage
-            stage.close();  // Close the current book list page
+            parentStage.show();
+            stage.close();
         });
 
         homeBtn.setOnAction(event -> {
             try {
                 FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/HomeView.fxml"));
-                HomeController homeController = new HomeController(new Stage(), null, cart);  // Redirect to Home
+                HomeController homeController = new HomeController(stage, this.model, this.cart);
                 loader.setController(homeController);
                 
                 Pane root = loader.load();
                 homeController.showStage(root);
-                stage.close();
             } catch (Exception e) {
                 System.out.println("Error loading HomeView: " + e.getMessage());
                 e.printStackTrace();
             }
         });
 
+
+
         addToCartBtn.setOnAction(event -> {
             try {
                 FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/SearchBookView.fxml"));
-                SearchBookController searchBookController = new SearchBookController(new Stage(), stage, cart);  // Pass cart
+                SearchBookController searchBookController = new SearchBookController(new Stage(), stage, model, cart);
                 loader.setController(searchBookController);
 
                 Pane root = loader.load();
@@ -103,12 +107,12 @@ public class BookListController {
         viewCartBtn.setOnAction(event -> {
             try {
                 FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/CartView.fxml"));
-                CartController cartController = new CartController(new Stage(), stage, cart);  // Pass cart
+                CartController cartController = new CartController(new Stage(), stage, model, cart);
                 loader.setController(cartController);
 
                 Pane root = loader.load();
                 cartController.showStage(root);
-                stage.hide();  // Hide current stage
+                stage.hide();
             } catch (Exception e) {
                 System.out.println("Error loading CartView: " + e.getMessage());
                 e.printStackTrace();
@@ -117,7 +121,7 @@ public class BookListController {
     }
 
     public void showStage(Pane root) {
-        Scene scene = new Scene(root, 870, 450);  // Consistent window size
+        Scene scene = new Scene(root, 870, 450);
         stage.setScene(scene);
         stage.setResizable(false);
         stage.setTitle("List of Books");
