@@ -1,7 +1,6 @@
 package dao;
 
 import java.sql.SQLException;
-
 import model.User;
 
 /**
@@ -13,6 +12,8 @@ import model.User;
 public interface UserDao {
     void setup() throws SQLException;
     User getUser(String username, String password) throws SQLException;
-    User createUser(String username, String password, String firstName, String lastName) throws SQLException; // Updated signature
-}
+    User createUser(String username, String password, String firstName, String lastName) throws SQLException;
 
+    // New method for updating user details
+    void updateUser(User user) throws SQLException;  // Added the updateUser method
+}

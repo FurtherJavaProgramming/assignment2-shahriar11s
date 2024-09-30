@@ -7,6 +7,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.MenuItem; // Import MenuItem for the Profile menu
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
@@ -40,6 +41,10 @@ public class HomeController {
     private Button listBooksBtn;
     @FXML
     private Button quitBtn;
+
+    // MenuItem for Update Profile in the MenuBar
+    @FXML
+    private MenuItem updateProfile;  // UpdateProfile is linked to the MenuItem in HomeView.fxml
 
     private Stage stage;
     private Model model;
@@ -77,7 +82,7 @@ public class HomeController {
                 BookListController bookListController = new BookListController(new Stage(), stage, model, cart);
                 loader.setController(bookListController);
 
-                Pane root = loader.load();  // Update here to Pane if needed
+                Pane root = loader.load();
                 bookListController.showStage(root);
                 stage.hide();
             } catch (Exception e) {
@@ -93,7 +98,7 @@ public class HomeController {
                 SearchBookController searchBookController = new SearchBookController(new Stage(), stage, model, cart);
                 loader.setController(searchBookController);
 
-                Pane root = loader.load();  // Update here to Pane if needed
+                Pane root = loader.load();
                 searchBookController.showStage(root);
                 stage.hide();
             } catch (Exception e) {
@@ -109,7 +114,7 @@ public class HomeController {
                 CartController cartController = new CartController(new Stage(), stage, model, cart);
                 loader.setController(cartController);
 
-                Pane root = loader.load();  // Update here to Pane if needed
+                Pane root = loader.load();
                 cartController.showStage(root);
                 stage.hide();
             } catch (Exception e) {
@@ -118,11 +123,27 @@ public class HomeController {
             }
         });
 
+        // Update Profile MenuItem action (not a button anymore)
+        updateProfile.setOnAction(event -> {
+            try {
+                FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/EditProfileView.fxml"));
+                EditProfileController editProfileController = new EditProfileController(new Stage(), model);
+                loader.setController(editProfileController);
+
+                Pane root = loader.load();
+                editProfileController.showStage(root);
+            } catch (Exception e) {
+                System.out.println("Error loading EditProfileView: " + e.getMessage());
+                e.printStackTrace();
+            }
+        });
+
+        // Quit button action
         quitBtn.setOnAction(event -> stage.close());
     }
 
-    public void showStage(Pane root) {  // Update here to Pane
-        Scene scene = new Scene(root, 870, 450);
+    public void showStage(Pane root) {
+        Scene scene = new Scene(root, 870, 473);
         stage.setScene(scene);
         stage.setResizable(false);
         stage.setTitle("Home");

@@ -64,4 +64,19 @@ public class UserDaoImpl implements UserDao {
             return new User(username, password, firstName, lastName);
         }
     }
+
+    // New method to update user details in the database
+    @Override
+    public void updateUser(User user) throws SQLException {
+        String sql = "UPDATE " + TABLE_NAME + " SET first_name = ?, last_name = ?, password = ? WHERE username = ?";
+        try (Connection connection = Database.getConnection();
+             PreparedStatement stmt = connection.prepareStatement(sql)) {
+            stmt.setString(1, user.getFirstName());
+            stmt.setString(2, user.getLastName());
+            stmt.setString(3, user.getPassword());  // Assuming the password is already hashed
+            stmt.setString(4, user.getUsername());  // Username is the key and is not changeable
+
+            stmt.executeUpdate();
+        }
+    }
 }

@@ -29,16 +29,19 @@
 
     <!-- Center section with Welcome message and Top-Selling Books Table -->
     <center>
-        <VBox alignment="TOP_CENTER" spacing="20" style="-fx-padding: 20;">
+        <VBox alignment="TOP_CENTER" spacing="10" style="-fx-padding: 10;">
             
             <!-- Welcome Message -->
-            <Label fx:id="welcomeLabel" text="Welcome!" style="-fx-font-size: 24px; -fx-font-weight: bold; -fx-text-fill: #333;"/>
+            <Label fx:id="welcomeLabel" text="Welcome!" style="-fx-font-size: 20px; -fx-font-weight: bold; -fx-text-fill: #333;"/>
+            
+            <!-- Label for Most Selling Books -->
+            <Label text="Most Selling Books" style="-fx-font-size: 14px; -fx-font-weight: bold; -fx-text-fill: #333;"/>
 
             <!-- Top-Selling Books Table -->
-            <TableView fx:id="topBooksTable" prefWidth="600" maxHeight="150" style="-fx-background-color: #fff;">
+            <TableView fx:id="topBooksTable" prefWidth="600" maxHeight="300" style="-fx-background-color: #fff;">
                 <columns>
-                    <TableColumn fx:id="titleCol" text="Title" prefWidth="200"/>
-                    <TableColumn fx:id="authorCol" text="Author" prefWidth="200"/>
+                    <TableColumn fx:id="titleCol" text="Title" prefWidth="280"/>
+                    <TableColumn fx:id="authorCol" text="Author" prefWidth="230"/>
                     <TableColumn fx:id="soldCol" text="Sold Copies" prefWidth="200"/>
                 </columns>
             </TableView>

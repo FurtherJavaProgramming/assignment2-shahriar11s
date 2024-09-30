@@ -121,7 +121,7 @@ public class BookListController {
     }
 
     public void showStage(Pane root) {
-        Scene scene = new Scene(root, 870, 450);
+        Scene scene = new Scene(root, 870, 473);
         stage.setScene(scene);
         stage.setResizable(false);
         stage.setTitle("List of Books");
