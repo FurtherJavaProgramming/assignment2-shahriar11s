@@ -25,8 +25,6 @@ public class HomeController {
     @FXML
     private Button viewCartBtn;
     @FXML
-    private Button removeBookBtn;
-    @FXML
     private Button checkoutBtn;
     @FXML
     private Button listBooksBtn;

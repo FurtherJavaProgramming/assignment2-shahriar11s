@@ -7,6 +7,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 import model.Book;
@@ -22,11 +23,11 @@ public class CartController {
     @FXML
     private TableColumn<Book, String> authorCol;
     @FXML
-    private TableColumn<Book, Integer> quantityCol;
+    private TableColumn<Book, Void> quantityCol;  // Updated to handle buttons and quantity display
     @FXML
     private TableColumn<Book, Double> priceCol;
     @FXML
-    private TableColumn<Book, Void> actionCol; // New column for delete action
+    private TableColumn<Book, Void> actionCol; // Column for delete action
     @FXML
     private Button goBackBtn;
     @FXML
@@ -55,18 +56,15 @@ public class CartController {
         // Set up table columns
         titleCol.setCellValueFactory(new PropertyValueFactory<>("title"));
         authorCol.setCellValueFactory(new PropertyValueFactory<>("author"));
-        quantityCol.setCellValueFactory(cellData -> {
-            Book book = cellData.getValue();
-            return new javafx.beans.property.SimpleObjectProperty<>(cart.get(book));
-        });
         priceCol.setCellValueFactory(new PropertyValueFactory<>("price"));
 
         // Populate the cart table
         ObservableList<Book> cartItems = FXCollections.observableArrayList(cart.keySet());
         cartTable.setItems(cartItems);
 
-        // Add action column for delete button
+        // Add action columns
         addDeleteButtonToTable();
+        addQuantityButtonsToTable();  // Add quantity buttons with quantity display
 
         // Calculate and display total price
         double totalPrice = calculateTotalPrice();
@@ -79,7 +77,6 @@ public class CartController {
         });
 
         listBooksBtn.setOnAction(event -> {
-            // Logic to go back to the list of books
             try {
                 FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/BookListView.fxml"));
                 BookListController bookListController = new BookListController(new Stage(), stage, cart); // Add cart parameter here
@@ -95,7 +92,6 @@ public class CartController {
         });
 
         addToCartBtn.setOnAction(event -> {
-            // Logic to go back to Add to Cart page
             try {
                 FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/SearchBookView.fxml"));
                 SearchBookController searchBookController = new SearchBookController(new Stage(), stage, cart); // Add cart parameter here
@@ -174,6 +170,73 @@ public class CartController {
                     setGraphic(null);
                 } else {
                     setGraphic(deleteButton);
+                }
+            }
+        });
+    }
+
+    // Add increase/decrease buttons with quantity display
+    private void addQuantityButtonsToTable() {
+        quantityCol.setCellFactory(param -> new TableCell<>() {
+            private final Button increaseButton = new Button("+");
+            private final Button decreaseButton = new Button("-");
+            private final Label quantityLabel = new Label();
+
+            private final HBox quantityBox = new HBox(5, decreaseButton, quantityLabel, increaseButton);
+
+            {
+                quantityBox.setStyle("-fx-alignment: center;");  // Center the HBox
+
+                increaseButton.setOnAction(event -> {
+                    Book book = getTableView().getItems().get(getIndex());
+                    int currentQuantity = cart.get(book);
+
+                    // Check if stock is available for the increase
+                    if (book.getStock() > 0) {
+                        cart.put(book, currentQuantity + 1);
+                        book.setStock(book.getStock() - 1);  // Decrease stock
+
+                        updateQuantityLabel(book);  // Update quantity label
+                        cartTable.refresh();
+                        totalPriceLabel.setText(calculateTotalPrice() + " AUD");
+                    } else {
+                        Alert alert = new Alert(Alert.AlertType.WARNING);
+                        alert.setTitle("Stock Warning");
+                        alert.setHeaderText(null);
+                        alert.setContentText("No more stock available for " + book.getTitle());
+                        alert.showAndWait();
+                    }
+                });
+
+                decreaseButton.setOnAction(event -> {
+                    Book book = getTableView().getItems().get(getIndex());
+                    int currentQuantity = cart.get(book);
+
+                    // Ensure the quantity doesn't go below 1
+                    if (currentQuantity > 1) {
+                        cart.put(book, currentQuantity - 1);
+                        book.setStock(book.getStock() + 1);  // Increase stock
+
+                        updateQuantityLabel(book);  // Update quantity label
+                        cartTable.refresh();
+                        totalPriceLabel.setText(calculateTotalPrice() + " AUD");
+                    }
+                });
+            }
+
+            private void updateQuantityLabel(Book book) {
+                quantityLabel.setText(String.valueOf(cart.get(book)));
+            }
+
+            @Override
+            protected void updateItem(Void item, boolean empty) {
+                super.updateItem(item, empty);
+                if (empty) {
+                    setGraphic(null);
+                } else {
+                    Book book = getTableView().getItems().get(getIndex());
+                    updateQuantityLabel(book);  // Set the initial quantity value
+                    setGraphic(quantityBox);
                 }
             }
         });

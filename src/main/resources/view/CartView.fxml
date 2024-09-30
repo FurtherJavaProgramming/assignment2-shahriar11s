@@ -27,10 +27,10 @@
     <!-- Table for showing cart items -->
     <TableView fx:id="cartTable" VBox.vgrow="ALWAYS">
         <columns>
-            <TableColumn fx:id="titleCol" text="Title" prefWidth="280.0" />
-            <TableColumn fx:id="authorCol" text="Author" prefWidth="210.0" />
-            <TableColumn fx:id="quantityCol" text="Quantity" prefWidth="100.0" />
-            <TableColumn fx:id="priceCol" text="Price (AUD)/Ea" prefWidth="130.0" />
+            <TableColumn fx:id="titleCol" text="Title" prefWidth="270.0" />
+            <TableColumn fx:id="authorCol" text="Author" prefWidth="180.0" />
+            <TableColumn fx:id="quantityCol" text="Quantity" prefWidth="140.0" />
+            <TableColumn fx:id="priceCol" text="Unit Price (AUD)" prefWidth="130.0" />
             <TableColumn fx:id="actionCol" text="Action" prefWidth="100.0" /> <!-- New column for delete button -->
         </columns>
     </TableView>

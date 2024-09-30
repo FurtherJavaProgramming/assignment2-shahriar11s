@@ -30,7 +30,6 @@
       <!-- Buttons for menu options -->
       <Button fx:id="addBookBtn" text="Add Book to Shopping Cart" />
       <Button fx:id="viewCartBtn" text="View Shopping Cart" />
-      <Button fx:id="removeBookBtn" text="Remove Book from Cart" />
       <Button fx:id="checkoutBtn" text="Checkout" />
       <Button fx:id="listBooksBtn" text="List All Books" />
       <Button fx:id="quitBtn" text="Quit" />
