@@ -71,6 +71,10 @@ public class SearchBookController {
         priceCol.setCellValueFactory(new PropertyValueFactory<>("price"));
         stockCol.setCellValueFactory(new PropertyValueFactory<>("stock"));
 
+        // Load all books initially when the page is opened
+        ObservableList<Book> allBooks = FXCollections.observableArrayList(BookDao.getAllBooks());
+        bookTable.setItems(allBooks);
+
         // Search button action
         searchButton.setOnAction(event -> {
             String keyword = searchField.getText().toLowerCase();
