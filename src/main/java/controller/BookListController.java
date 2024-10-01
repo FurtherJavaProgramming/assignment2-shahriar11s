@@ -1,5 +1,7 @@
 package controller;
 
+import javafx.animation.KeyFrame;
+import javafx.animation.Timeline;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -11,6 +13,7 @@ import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
+import javafx.util.Duration;
 import model.Book;
 import model.Model;
 import dao.BookDao;
@@ -66,6 +69,14 @@ public class BookListController {
         // Fetch the books and display them in the table
         ObservableList<Book> bookList = FXCollections.observableArrayList(BookDao.getAllBooks());
         bookTable.setItems(bookList);
+
+        // Create a timeline to refresh every second
+        Timeline timeline = new Timeline(new KeyFrame(Duration.seconds(1), event -> {
+            ObservableList<Book> updatedBooks = FXCollections.observableArrayList(BookDao.getAllBooks());
+            bookTable.setItems(updatedBooks);
+        }));
+        timeline.setCycleCount(Timeline.INDEFINITE);
+        timeline.play();
 
         // Button actions
         goBackBtn.setOnAction(event -> {

@@ -110,12 +110,41 @@ public class CartController {
         });
 
         checkoutBtn.setOnAction(event -> {
-            // Placeholder for checkout functionality
-            Alert alert = new Alert(Alert.AlertType.INFORMATION);
-            alert.setTitle("Checkout");
-            alert.setHeaderText(null);
-            alert.setContentText("Proceeding to checkout!");
-            alert.showAndWait();
+            // Check if enough stock is available for all books in the cart before proceeding to checkout
+            boolean hasSufficientStock = true;
+            for (Book book : cart.keySet()) {
+                int cartQuantity = cart.get(book);
+                if (book.getStock() < cartQuantity) {
+                    hasSufficientStock = false;
+                    Alert alert = new Alert(Alert.AlertType.ERROR);
+                    alert.setTitle("Insufficient Stock");
+                    alert.setHeaderText(null);
+                    alert.setContentText("There are only " + book.getStock() + " copies of " + book.getTitle() + " available.");
+                    alert.showAndWait();
+                    break;
+                }
+            }
+
+            if (hasSufficientStock) {
+                // Deduct stock and update database for each book in the cart
+                for (Book book : cart.keySet()) {
+                    int cartQuantity = cart.get(book);
+                    book.setStock(book.getStock() - cartQuantity);
+                    BookDao.updateBookStock(book.getId(), book.getStock());
+                }
+
+                // Show checkout success message
+                Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                alert.setTitle("Checkout");
+                alert.setHeaderText(null);
+                alert.setContentText("Proceeding to checkout!");
+                alert.showAndWait();
+
+                // Clear the cart after checkout
+                cart.clear();
+                cartTable.getItems().clear();
+                totalPriceLabel.setText("0.0 AUD");
+            }
         });
 
         homeBtn.setOnAction(event -> {
@@ -131,8 +160,6 @@ public class CartController {
                 e.printStackTrace();
             }
         });
-
-
     }
 
     // Calculate total price of cart items
@@ -196,20 +223,33 @@ public class CartController {
                     Book book = getTableView().getItems().get(getIndex());
                     int currentQuantity = cart.get(book);
 
-                    // Check if stock is available for the increase
-                    if (book.getStock() > 0) {
-                        cart.put(book, currentQuantity + 1);
-                        book.setStock(book.getStock() - 1);  // Decrease stock
-                        BookDao.updateBookStock(book.getId(), book.getStock());
+                    // Fetch real-time stock from the database
+                    int realTimeStock = BookDao.getAllBooks().stream()
+                            .filter(b -> b.getId() == book.getId())
+                            .findFirst().map(Book::getStock).orElse(0);
 
-                        updateQuantityLabel(book);  // Update quantity label
-                        cartTable.refresh();
-                        totalPriceLabel.setText(calculateTotalPrice() + " AUD");
+                    // Check if stock is available for the increase
+                    if (realTimeStock > 0) {
+                        if (currentQuantity < realTimeStock) {
+                            cart.put(book, currentQuantity + 1);
+                            book.setStock(book.getStock() - 1);  // Decrease stock
+                            BookDao.updateBookStock(book.getId(), book.getStock());
+
+                            updateQuantityLabel(book);  // Update quantity label
+                            cartTable.refresh();
+                            totalPriceLabel.setText(calculateTotalPrice() + " AUD");
+                        } else {
+                            Alert alert = new Alert(Alert.AlertType.WARNING);
+                            alert.setTitle("Stock Warning");
+                            alert.setHeaderText(null);
+                            alert.setContentText("No more stock available for " + book.getTitle());
+                            alert.showAndWait();
+                        }
                     } else {
                         Alert alert = new Alert(Alert.AlertType.WARNING);
                         alert.setTitle("Stock Warning");
                         alert.setHeaderText(null);
-                        alert.setContentText("No more stock available for " + book.getTitle());
+                        alert.setContentText("No stock available for " + book.getTitle());
                         alert.showAndWait();
                     }
                 });

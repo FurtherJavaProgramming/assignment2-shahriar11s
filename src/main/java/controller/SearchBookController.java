@@ -15,6 +15,9 @@ import model.Model;
 import dao.BookDao;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Pos;
+import javafx.concurrent.ScheduledService;
+import javafx.concurrent.Task;
+import javafx.util.Duration;
 
 import java.util.Map;
 import java.util.Optional;
@@ -54,6 +57,8 @@ public class SearchBookController {
     private Model model;
     private Map<Book, Integer> cart;  // Cart to store books and quantities
 
+    private Book selectedBook;  // Store the selected book
+
     // Constructor that accepts Stage, parentStage, and Map<Book, Integer>
     public SearchBookController(Stage stage, Stage parentStage, Model model, Map<Book, Integer> cart) {
         this.stage = stage;
@@ -75,6 +80,35 @@ public class SearchBookController {
         ObservableList<Book> allBooks = FXCollections.observableArrayList(BookDao.getAllBooks());
         bookTable.setItems(allBooks);
 
+        // Handle selection and re-selection on refresh
+        bookTable.getSelectionModel().selectedItemProperty().addListener((obs, oldSelection, newSelection) -> {
+            selectedBook = newSelection;
+        });
+
+        // ScheduledService to refresh the stock data every second
+        ScheduledService<Void> refreshService = new ScheduledService<>() {
+            @Override
+            protected Task<Void> createTask() {
+                return new Task<>() {
+                    @Override
+                    protected Void call() {
+                        // Preserve the selected book during refresh
+                        if (selectedBook != null) {
+                            int selectedIndex = bookTable.getSelectionModel().getSelectedIndex();
+                            ObservableList<Book> updatedBooks = FXCollections.observableArrayList(BookDao.getAllBooks());
+                            bookTable.setItems(updatedBooks);
+                            bookTable.getSelectionModel().select(selectedIndex);
+                        } else {
+                            bookTable.setItems(FXCollections.observableArrayList(BookDao.getAllBooks()));
+                        }
+                        return null;
+                    }
+                };
+            }
+        };
+        refreshService.setPeriod(Duration.seconds(1));
+        refreshService.start();
+
         // Search button action
         searchButton.setOnAction(event -> {
             String keyword = searchField.getText().toLowerCase();
@@ -93,7 +127,6 @@ public class SearchBookController {
 
         // Add to cart button action with custom quantity dialog
         addToCartBtn.setOnAction(event -> {
-            Book selectedBook = bookTable.getSelectionModel().getSelectedItem();
             if (selectedBook != null) {
                 // Custom dialog for quantity input
                 Dialog<Integer> dialog = new Dialog<>();
