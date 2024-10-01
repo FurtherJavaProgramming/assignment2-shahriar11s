@@ -12,6 +12,7 @@ import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 import model.Book;
 import model.Model;
+import dao.BookDao;
 
 import java.util.Map;
 
@@ -156,6 +157,7 @@ public class CartController {
                     // Increase the stock of the book when removed from the cart
                     int quantityInCart = cart.get(book);
                     book.setStock(book.getStock() + quantityInCart);
+                    BookDao.updateBookStock(book.getId(), book.getStock());
 
                     // Remove the book from the cart
                     cart.remove(book);
@@ -198,6 +200,7 @@ public class CartController {
                     if (book.getStock() > 0) {
                         cart.put(book, currentQuantity + 1);
                         book.setStock(book.getStock() - 1);  // Decrease stock
+                        BookDao.updateBookStock(book.getId(), book.getStock());
 
                         updateQuantityLabel(book);  // Update quantity label
                         cartTable.refresh();
@@ -219,6 +222,7 @@ public class CartController {
                     if (currentQuantity > 1) {
                         cart.put(book, currentQuantity - 1);
                         book.setStock(book.getStock() + 1);  // Increase stock
+                        BookDao.updateBookStock(book.getId(), book.getStock());
 
                         updateQuantityLabel(book);  // Update quantity label
                         cartTable.refresh();

@@ -87,8 +87,6 @@ public class BookListController {
             }
         });
 
-
-
         addToCartBtn.setOnAction(event -> {
             try {
                 FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/SearchBookView.fxml"));

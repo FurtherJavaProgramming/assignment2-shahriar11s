@@ -75,12 +75,7 @@ public class SearchBookController {
         searchButton.setOnAction(event -> {
             String keyword = searchField.getText().toLowerCase();
             if (!keyword.isEmpty()) {
-                ObservableList<Book> filteredBooks = FXCollections.observableArrayList();
-                for (Book book : BookDao.getAllBooks()) {
-                    if (book.getTitle().toLowerCase().contains(keyword) || book.getAuthor().toLowerCase().contains(keyword)) {
-                        filteredBooks.add(book);
-                    }
-                }
+                ObservableList<Book> filteredBooks = FXCollections.observableArrayList(BookDao.searchBooks(keyword));
                 bookTable.setItems(filteredBooks);
 
                 // Show a message if no books were found
@@ -152,8 +147,9 @@ public class SearchBookController {
                     if (quantity > 0) {
                         // Check if enough stock is available
                         if (selectedBook.getStock() >= quantity) {
-                            // Reduce the stock of the book
+                            // Reduce the stock of the book and update in the database
                             selectedBook.setStock(selectedBook.getStock() - quantity);
+                            BookDao.updateBookStock(selectedBook.getId(), selectedBook.getStock());
                             bookTable.refresh(); // Refresh the table to show updated stock
 
                             // Add book and quantity to the cart
@@ -201,8 +197,6 @@ public class SearchBookController {
                 e.printStackTrace();
             }
         });
-
-
 
         listBooksBtn.setOnAction(event -> {
             try {
