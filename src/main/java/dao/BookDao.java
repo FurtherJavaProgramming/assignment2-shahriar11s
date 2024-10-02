@@ -107,4 +107,30 @@ public class BookDao {
             e.printStackTrace();
         }
     }
+
+    // Method to fetch a book by its ID
+    public static Book getBookById(int bookId) {
+        String sql = "SELECT * FROM books WHERE id = ?";
+        Book book = null;
+
+        try (Connection connection = Database.getConnection();
+             PreparedStatement stmt = connection.prepareStatement(sql)) {
+            stmt.setInt(1, bookId);
+            ResultSet rs = stmt.executeQuery();
+
+            if (rs.next()) {
+                book = new Book(
+                    rs.getInt("id"),
+                    rs.getString("title"),
+                    rs.getString("author"),
+                    rs.getDouble("price"),
+                    rs.getInt("stock"),
+                    rs.getInt("sold")
+                );
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return book;
+    }
 }

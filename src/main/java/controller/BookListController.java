@@ -16,6 +16,7 @@ import javafx.stage.Stage;
 import javafx.util.Duration;
 import model.Book;
 import model.Model;
+import model.User;
 import dao.BookDao;
 
 import java.util.Map;
@@ -49,12 +50,18 @@ public class BookListController {
     private Stage parentStage;
     private Model model;
     private Map<Book, Integer> cart;
+    private User currentUser;  // Add currentUser
 
-    public BookListController(Stage stage, Stage parentStage, Model model, Map<Book, Integer> cart) {
+
+ // Constructor update
+    public BookListController(Stage stage, Stage parentStage, Model model, Map<Book, Integer> cart, User currentUser) {
         this.stage = stage;
         this.parentStage = parentStage;
+        this.model = model;
         this.cart = cart;
+        this.currentUser = currentUser;  // Assign currentUser
     }
+
 
     @FXML
     public void initialize() {
@@ -87,7 +94,7 @@ public class BookListController {
         homeBtn.setOnAction(event -> {
             try {
                 FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/HomeView.fxml"));
-                HomeController homeController = new HomeController(stage, this.model, this.cart);
+                HomeController homeController = new HomeController(stage, this.model, this.cart, currentUser);
                 loader.setController(homeController);
                 
                 Pane root = loader.load();
@@ -101,7 +108,7 @@ public class BookListController {
         addToCartBtn.setOnAction(event -> {
             try {
                 FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/SearchBookView.fxml"));
-                SearchBookController searchBookController = new SearchBookController(new Stage(), stage, model, cart);
+                SearchBookController searchBookController = new SearchBookController(new Stage(), stage, model, cart, currentUser);
                 loader.setController(searchBookController);
 
                 Pane root = loader.load();
@@ -116,7 +123,7 @@ public class BookListController {
         viewCartBtn.setOnAction(event -> {
             try {
                 FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/CartView.fxml"));
-                CartController cartController = new CartController(new Stage(), stage, model, cart);
+                CartController cartController = new CartController(new Stage(), stage, model, cart, currentUser);
                 loader.setController(cartController);
 
                 Pane root = loader.load();

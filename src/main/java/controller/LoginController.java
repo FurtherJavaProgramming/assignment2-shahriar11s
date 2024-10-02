@@ -55,8 +55,8 @@ public class LoginController {
                             System.out.println("Loading HomeView.fxml...");  // Debugging print
                             FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/HomeView.fxml"));
                             
-                            // Pass cart to HomeController along with stage and model
-                            HomeController homeController = new HomeController(stage, model, cart);
+                            // Pass cart to HomeController along with stage, model, and currentUser
+                            HomeController homeController = new HomeController(stage, model, cart, user);  // Updated constructor
                             loader.setController(homeController);
                             
                             BorderPane root = loader.load();  // BorderPane instead of VBox
