@@ -120,6 +120,7 @@ private Button addToCartBtn;
             }
 
             if (hasSufficientStock) {
+                // DO NOT reduce stock here
                 try {
                     FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/CheckoutView.fxml"));
                     CheckoutController checkoutController = new CheckoutController(new Stage(), stage, cart, calculateTotalPrice(), currentUser, model);
@@ -132,7 +133,6 @@ private Button addToCartBtn;
                 }
             }
         });
-
 
 
         homeBtn.setOnAction(event -> {

@@ -11,7 +11,7 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 
-<BorderPane xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" prefHeight="600.0" prefWidth="800.0" style="-fx-background-color: #f4f4f4;">
+<BorderPane prefHeight="600.0" prefWidth="800.0" style="-fx-background-color: #f4f4f4;" xmlns="http://javafx.com/javafx/23" xmlns:fx="http://javafx.com/fxml/1">
     
     <!-- Top Menu Bar -->
     <top>
@@ -19,8 +19,8 @@
             <menus>
                 <Menu fx:id="profile" mnemonicParsing="false" text="Profile">
                     <items>
-                        <MenuItem fx:id="viewProfile" mnemonicParsing="false" text="View my profile"/>
-                        <MenuItem fx:id="updateProfile" mnemonicParsing="false" text="Update my profile"/>
+                        <MenuItem fx:id="viewProfile" mnemonicParsing="false" text="View Profile" />
+                        <MenuItem fx:id="updateProfile" mnemonicParsing="false" text="Update Profile" />
                     </items>
                 </Menu>
             </menus>
@@ -32,26 +32,26 @@
         <VBox alignment="TOP_CENTER" spacing="10" style="-fx-padding: 10;">
             
             <!-- Welcome Message -->
-            <Label fx:id="welcomeLabel" text="Welcome!" style="-fx-font-size: 20px; -fx-font-weight: bold; -fx-text-fill: #333;"/>
+            <Label fx:id="welcomeLabel" style="-fx-font-size: 20px; -fx-font-weight: bold; -fx-text-fill: #333;" text="Welcome!" />
             
             <!-- Label for Most Selling Books -->
-            <Label text="Most Selling Books" style="-fx-font-size: 14px; -fx-font-weight: bold; -fx-text-fill: #333;"/>
+            <Label style="-fx-font-size: 14px; -fx-font-weight: bold; -fx-text-fill: #333;" text="Most Selling Books" />
 
             <!-- Top-Selling Books Table -->
-            <TableView fx:id="topBooksTable" prefWidth="600" maxHeight="300" style="-fx-background-color: #fff;">
+            <TableView fx:id="topBooksTable" maxHeight="300" prefWidth="600" style="-fx-background-color: #fff;">
                 <columns>
-                    <TableColumn fx:id="titleCol" text="Title" prefWidth="280"/>
-                    <TableColumn fx:id="authorCol" text="Author" prefWidth="230"/>
-                    <TableColumn fx:id="soldCol" text="Sold Copies" prefWidth="200"/>
+                    <TableColumn fx:id="titleCol" prefWidth="328.0" text="Title" />
+                    <TableColumn fx:id="authorCol" prefWidth="225.0" text="Author" />
+                    <TableColumn fx:id="soldCol" prefWidth="226.0" text="Sold Copies" />
                 </columns>
             </TableView>
 
             <!-- Buttons -->
-            <VBox spacing="10" alignment="CENTER">
-                <Button fx:id="addBookBtn" text="Add Book to Shopping Cart" style="-fx-background-color: #4CAF50; -fx-text-fill: white; -fx-font-size: 14px; -fx-background-radius: 10;"/>
-                <Button fx:id="viewCartBtn" text="View Shopping Cart" style="-fx-background-color: #4CAF50; -fx-text-fill: white; -fx-font-size: 14px; -fx-background-radius: 10;"/>
-                <Button fx:id="checkoutBtn" text="Checkout" style="-fx-background-color: #4CAF50; -fx-text-fill: white; -fx-font-size: 14px; -fx-background-radius: 10;"/>
-                <Button fx:id="listBooksBtn" text="List All Books" style="-fx-background-color: #4CAF50; -fx-text-fill: white; -fx-font-size: 14px; -fx-background-radius: 10;"/>
+            <VBox alignment="CENTER" spacing="10">
+                <Button fx:id="listBooksBtn" style="-fx-background-color: #4CAF50; -fx-text-fill: white; -fx-font-size: 14px; -fx-background-radius: 10;" text="List All Books" />
+                <Button fx:id="addBookBtn" style="-fx-background-color: #4CAF50; -fx-text-fill: white; -fx-font-size: 14px; -fx-background-radius: 10;" text="Purchase Book" />
+                <Button fx:id="viewCartBtn" style="-fx-background-color: #4CAF50; -fx-text-fill: white; -fx-font-size: 14px; -fx-background-radius: 10;" text="View Cart" />
+                <Button fx:id="checkoutBtn" style="-fx-background-color: #4CAF50; -fx-text-fill: white; -fx-font-size: 14px; -fx-background-radius: 10;" text="Checkout" />
             </VBox>
 
         </VBox>
@@ -60,7 +60,7 @@
     <!-- Bottom Right: Quit Button -->
     <bottom>
         <HBox alignment="BOTTOM_RIGHT" spacing="20" style="-fx-padding: 10;">
-            <Button fx:id="quitBtn" text="Quit" style="-fx-background-color: #f44336; -fx-text-fill: white; -fx-font-size: 14px; -fx-background-radius: 10;"/>
+            <Button fx:id="quitBtn" style="-fx-background-color: #f44336; -fx-text-fill: white; -fx-font-size: 14px; -fx-background-radius: 10;" text="Quit" />
         </HBox>
     </bottom>
 

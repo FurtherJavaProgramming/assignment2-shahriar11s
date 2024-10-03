@@ -145,25 +145,12 @@ public class CheckoutController {
         // Save the order with the correct total price
         OrderDao.saveOrder(order, user);  // Pass both Order and User
 
-        // *** Update stock in the database for each book ***
-        for (Book book : cart.keySet()) {
-            int cartQuantity = cart.get(book);  // Get the quantity the user is buying
-
-            // Ensure the stock is updated only once correctly
-            int updatedStock = book.getStock() - cartQuantity;
-            if (updatedStock >= 0) {  // Ensure no negative stock values
-                book.setStock(updatedStock);  // Update the stock correctly
-                BookDao.updateBookStock(book.getId(), updatedStock);  // Save the updated stock in the database
-            } else {
-                showAlert(Alert.AlertType.ERROR, "Stock Error", "Not enough stock for the book: " + book.getTitle());
-                return;  // Stop the order process if the stock is invalid
-            }
-        }
-
+        // *** DO NOT update stock again here, as it was already updated when adding to the cart ***
+        
         // Show payment success message
         showAlert(Alert.AlertType.INFORMATION, "Payment Successful", "Order placed successfully!\nOrder ID: " + orderId);
 
-        // Clear the cart after updating stock
+        // Clear the cart after placing the order
         cart.clear();
 
         // Load and show the homepage after the order is placed
@@ -180,8 +167,6 @@ public class CheckoutController {
             e.printStackTrace();
         }
     }
-
-
 
 
 

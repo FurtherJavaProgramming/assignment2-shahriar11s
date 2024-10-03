@@ -5,9 +5,10 @@ import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
-import javafx.scene.control.MenuItem; // Import MenuItem for the Profile menu
+import javafx.scene.control.MenuItem;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
@@ -16,7 +17,7 @@ import javafx.stage.Stage;
 import model.Book;
 import model.Model;
 import dao.BookDao;
-import model.User;  // Make sure to import User
+import model.User;  
 
 import java.util.List;
 import java.util.Map;
@@ -43,21 +44,20 @@ public class HomeController {
     @FXML
     private Button quitBtn;
 
-    // MenuItem for Update Profile in the MenuBar
+    // MenuItem in the MenuBar
     @FXML
-    private MenuItem updateProfile;  // UpdateProfile is linked to the MenuItem in HomeView.fxml
+    private MenuItem updateProfile;
 
     private Stage stage;
     private Model model;
     private Map<Book, Integer> cart;
-    private User currentUser;  // Add a User instance variable
+    private User currentUser;
 
- // Constructor update
     public HomeController(Stage stage, Model model, Map<Book, Integer> cart, User currentUser) {
         this.stage = stage;
         this.model = model;
         this.cart = cart;
-        this.currentUser = currentUser;  // Assign currentUser
+        this.currentUser = currentUser;
     }
 
 
@@ -70,7 +70,7 @@ public class HomeController {
             welcomeLabel.setText("Welcome!");
         }
 
-        // Set up table columns for top books
+        //table for top books
         titleCol.setCellValueFactory(new PropertyValueFactory<>("title"));
         authorCol.setCellValueFactory(new PropertyValueFactory<>("author"));
         soldCol.setCellValueFactory(new PropertyValueFactory<>("sold"));
@@ -117,7 +117,7 @@ public class HomeController {
             try {
                 FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/CartView.fxml"));
                 // Pass the currentUser to the CartController
-                CartController cartController = new CartController(new Stage(), stage, model, cart, currentUser);  // Pass currentUser
+                CartController cartController = new CartController(new Stage(), stage, model, cart, currentUser); 
                 loader.setController(cartController);
 
                 Pane root = loader.load();
@@ -128,8 +128,34 @@ public class HomeController {
                 e.printStackTrace();
             }
         });
+        
+        // Checkout button action
+        checkoutBtn.setOnAction(event -> {
+            if (cart.isEmpty()) {
+                // Show alert if the cart is empty
+                Alert alert = new Alert(Alert.AlertType.WARNING);
+                alert.setTitle("Empty Cart");
+                alert.setHeaderText(null);
+                alert.setContentText("Your cart is empty. Please add books to the cart before proceeding to checkout.");
+                alert.showAndWait();
+            } else {
+                try {
+                    FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/CheckoutView.fxml"));
+                    //CheckoutController with the necessary data
+                    CheckoutController checkoutController = new CheckoutController(new Stage(), stage, cart, calculateTotalPrice(), currentUser, model);
+                    loader.setController(checkoutController);
 
-        // Update Profile MenuItem action (not a button anymore)
+                    Pane root = loader.load();
+                    checkoutController.showStage(root);
+                    stage.hide();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+
+
+        // Update Profile MenuItem action
         updateProfile.setOnAction(event -> {
             try {
                 FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/EditProfileView.fxml"));
@@ -148,7 +174,15 @@ public class HomeController {
         quitBtn.setOnAction(event -> stage.close());
     }
 
-    public void showStage(Pane root) {
+    private double calculateTotalPrice() {
+        return cart.entrySet().stream()
+                .mapToDouble(entry -> entry.getKey().getPrice() * entry.getValue())
+                .sum();
+    }
+
+
+
+	public void showStage(Pane root) {
         Scene scene = new Scene(root, 870, 473);
         stage.setScene(scene);
         stage.setResizable(false);

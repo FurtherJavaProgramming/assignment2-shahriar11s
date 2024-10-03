@@ -25,11 +25,11 @@ import java.util.Optional;
 
 public class SearchBookController {
     @FXML
-    private TextField searchField; // Search input field
+    private TextField searchField;
     @FXML
-    private Button searchButton; // Button for searching
+    private Button searchButton;
     @FXML
-    private TableView<Book> bookTable; // Table to show the search results
+    private TableView<Book> bookTable;
     @FXML
     private TableColumn<Book, Integer> idCol;
     @FXML
@@ -41,26 +41,26 @@ public class SearchBookController {
     @FXML
     private TableColumn<Book, Integer> stockCol;
     @FXML
-    private Button addToCartBtn; // Button to add to cart
+    private Button addToCartBtn;
     @FXML
-    private Button goBackBtn; // Button to go back
+    private Button goBackBtn;
     @FXML
-    private Button homeBtn;   // Home button
+    private Button homeBtn;
     @FXML
-    private Button listBooksBtn; // Button to list all books
+    private Button listBooksBtn;
     @FXML
-    private Button viewCartBtn; // Button to view cart
+    private Button viewCartBtn;
     @FXML
-    private Label messageLabel; // Label to show messages
+    private Label messageLabel;
 
     private Stage stage;
     private Stage parentStage;
     private Model model;
     private Map<Book, Integer> cart;
-    private User currentUser;  // Add currentUser
+    private User currentUser; 
 // Cart to store books and quantities
 
-    private Book selectedBook;  // Store the selected book
+    private Book selectedBook; 
 
  // Constructor update
     public SearchBookController(Stage stage, Stage parentStage, Model model, Map<Book, Integer> cart, User currentUser) {
@@ -68,20 +68,20 @@ public class SearchBookController {
         this.parentStage = parentStage;
         this.model = model;
         this.cart = cart;
-        this.currentUser = currentUser;  // Assign currentUser
+        this.currentUser = currentUser;
     }
 
 
     @FXML
     public void initialize() {
-        // Set up table columns
+        //table
         idCol.setCellValueFactory(new PropertyValueFactory<>("id"));
         titleCol.setCellValueFactory(new PropertyValueFactory<>("title"));
         authorCol.setCellValueFactory(new PropertyValueFactory<>("author"));
         priceCol.setCellValueFactory(new PropertyValueFactory<>("price"));
         stockCol.setCellValueFactory(new PropertyValueFactory<>("stock"));
 
-        // Load all books initially when the page is opened
+        //all books
         ObservableList<Book> allBooks = FXCollections.observableArrayList(BookDao.getAllBooks());
         bookTable.setItems(allBooks);
 
@@ -125,18 +125,18 @@ public class SearchBookController {
                 if (filteredBooks.isEmpty()) {
                     messageLabel.setText("No books found with the name '" + keyword + "'");
                 } else {
-                    messageLabel.setText("");  // Clear the message if books are found
+                    messageLabel.setText("");  
                 }
             }
         });
 
-        // Add to cart button action with custom quantity dialog
+        // Add to cart button action
         addToCartBtn.setOnAction(event -> {
             if (selectedBook != null) {
                 // Custom dialog for quantity input
                 Dialog<Integer> dialog = new Dialog<>();
                 dialog.setTitle("Enter Quantity");
-                dialog.setGraphic(null);  // Remove the question mark icon
+                dialog.setGraphic(null); 
 
                 GridPane grid = new GridPane();
                 grid.setHgap(10);
@@ -145,16 +145,16 @@ public class SearchBookController {
 
                 Label bookTitle = new Label("Add " + selectedBook.getTitle() + " to Cart");
                 bookTitle.setStyle("-fx-font-weight: bold;");
-                grid.add(bookTitle, 0, 0, 2, 1);  // Span 2 columns
+                grid.add(bookTitle, 0, 0, 2, 1);
 
-                // Create quantity input with increase/decrease buttons
+                //quantity input with increase/decrease buttons
                 TextField quantityField = new TextField("1");
                 Button increaseBtn = new Button("+");
                 Button decreaseBtn = new Button("-");
 
                 HBox quantityBox = new HBox(5, decreaseBtn, quantityField, increaseBtn);
                 quantityBox.setAlignment(Pos.CENTER);
-                grid.add(quantityBox, 0, 1, 2, 1);  // Span 2 columns
+                grid.add(quantityBox, 0, 1, 2, 1); 
 
                 // Increment and decrement buttons logic
                 increaseBtn.setOnAction(e -> {
