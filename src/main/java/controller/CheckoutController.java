@@ -140,7 +140,7 @@ public class CheckoutController {
         double finalTotalPrice = subtotal + tax + deliveryCharge;
 
         // Create the order object with the final total price
-        Order order = new Order(orderId, cart, finalTotalPrice);
+        Order order = new Order(orderId, cart, finalTotalPrice, null);
         
         // Save the order with the correct total price
         OrderDao.saveOrder(order, user);  // Pass both Order and User

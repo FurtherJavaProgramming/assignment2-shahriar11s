@@ -33,7 +33,7 @@
     <Label fx:id="message" style="-fx-text-fill: red;" />
 
     <HBox spacing="20" alignment="CENTER">
-        <Button fx:id="login" text="Login" style="-fx-background-color: #4CAF50; -fx-text-fill: white; -fx-font-size: 14px; -fx-background-radius: 10;" />
-        <Button fx:id="signup" text="Signup" style="-fx-background-color: #007bff; -fx-text-fill: white; -fx-font-size: 14px; -fx-background-radius: 10;" />
+        <Button fx:id="login" text="Login" style="-fx-background-color: #4CAF50; -fx-text-fill: white; -fx-font-size: 14px;" />
+        <Button fx:id="signup" text="Signup" style="-fx-background-color: #007bff; -fx-text-fill: white; -fx-font-size: 14px;" />
     </HBox>
 </VBox>

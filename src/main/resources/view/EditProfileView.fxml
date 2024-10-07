@@ -33,7 +33,7 @@
     <!-- Button Box for Save, Cancel, and Change Password Buttons -->
     <HBox GridPane.rowIndex="5" GridPane.columnIndex="0" GridPane.columnSpan="2" spacing="10" alignment="center">
         <Button text="Change Password" fx:id="changePasswordBtn" 
-                style="-fx-background-color: linear-gradient(to bottom, #00b4db, #0083b0); -fx-text-fill: white; -fx-background-radius: 10;"/>
+                style="-fx-background-color: linear-gradient(to bottom, #00b4db, #0083b0); -fx-text-fill: white;"/>
         <Button text="Save" fx:id="saveBtn" 
                 style="-fx-background-color: #4CAF50; -fx-text-fill: white; -fx-background-radius: 10;"/>
         <Button text="Cancel" fx:id="cancelBtn" 

@@ -1,17 +1,20 @@
 package model;
 
 import java.util.Map;
+import java.util.HashMap;
 
 public class Order {
     private String orderId;
     private Map<Book, Integer> cart;
     private double totalPrice;
+    private String orderDate;
+    private String bookSummary;
 
-    // Constructor
-    public Order(String orderId, Map<Book, Integer> cart, double totalPrice) {
+    public Order(String orderId, Map<Book, Integer> cart, double totalPrice, String orderDate) {
         this.orderId = orderId;
-        this.cart = cart;
+        setCart(cart); // Use setter to ensure null check and summary generation
         this.totalPrice = totalPrice;
+        this.orderDate = orderDate;
     }
 
     // Getters and Setters
@@ -28,7 +31,12 @@ public class Order {
     }
 
     public void setCart(Map<Book, Integer> cart) {
-        this.cart = cart;
+        if (cart == null) {
+            this.cart = new HashMap<>();
+        } else {
+            this.cart = cart;
+        }
+        updateBookSummary();
     }
 
     public double getTotalPrice() {
@@ -39,9 +47,40 @@ public class Order {
         this.totalPrice = totalPrice;
     }
 
-    // Optional: To display order details in a readable format
+    public String getOrderDate() {
+        return orderDate;
+    }
+
+    public void setOrderDate(String orderDate) {
+        this.orderDate = orderDate;
+    }
+
+    public String getBookSummary() {
+        return bookSummary;
+    }
+
+    // Method to update book summary
+    public void updateBookSummary() {
+        this.bookSummary = generateBookSummary();
+    }
+
+    // Helper method to generate book summary from the cart
+    private String generateBookSummary() {
+        if (cart == null || cart.isEmpty()) {
+            return "No books";
+        }
+        
+        StringBuilder summary = new StringBuilder();
+        for (Map.Entry<Book, Integer> entry : cart.entrySet()) {
+            Book book = entry.getKey();
+            int quantity = entry.getValue();
+            summary.append(book.getTitle()).append(" (").append(quantity).append("), ");
+        }
+        return summary.substring(0, summary.length() - 2);  // Remove last comma and space
+    }
+
     @Override
     public String toString() {
-        return "Order ID: " + orderId + "\nTotal Price: " + totalPrice + " AUD\n";
+        return "Order ID: " + orderId + "\nTotal Price: " + totalPrice + " AUD\nOrder Date: " + orderDate + "\nBooks: " + bookSummary;
     }
 }

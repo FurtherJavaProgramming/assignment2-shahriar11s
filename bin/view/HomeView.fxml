@@ -19,8 +19,8 @@
             <menus>
                 <Menu fx:id="profile" mnemonicParsing="false" text="Profile">
                     <items>
-                        <MenuItem fx:id="viewProfile" mnemonicParsing="false" text="View Profile" />
                         <MenuItem fx:id="updateProfile" mnemonicParsing="false" text="Update Profile" />
+                        <MenuItem fx:id="viewOrders" mnemonicParsing="false" text="View All Orders" /> <!-- New item for orders -->
                     </items>
                 </Menu>
             </menus>
@@ -48,10 +48,10 @@
 
             <!-- Buttons -->
             <VBox alignment="CENTER" spacing="10">
-                <Button fx:id="listBooksBtn" style="-fx-background-color: #4CAF50; -fx-text-fill: white; -fx-font-size: 14px; -fx-background-radius: 10;" text="List All Books" />
-                <Button fx:id="addBookBtn" style="-fx-background-color: #4CAF50; -fx-text-fill: white; -fx-font-size: 14px; -fx-background-radius: 10;" text="Purchase Book" />
-                <Button fx:id="viewCartBtn" style="-fx-background-color: #4CAF50; -fx-text-fill: white; -fx-font-size: 14px; -fx-background-radius: 10;" text="View Cart" />
-                <Button fx:id="checkoutBtn" style="-fx-background-color: #4CAF50; -fx-text-fill: white; -fx-font-size: 14px; -fx-background-radius: 10;" text="Checkout" />
+                <Button fx:id="listBooksBtn" style="-fx-background-color: #4CAF50; -fx-text-fill: white; -fx-font-size: 14px;" text="List All Books" />
+                <Button fx:id="addBookBtn" style="-fx-background-color: #4CAF50; -fx-text-fill: white; -fx-font-size: 14px;" text="Purchase Book" />
+                <Button fx:id="viewCartBtn" style="-fx-background-color: #4CAF50; -fx-text-fill: white; -fx-font-size: 14px;" text="View Cart" />
+                <Button fx:id="checkoutBtn" style="-fx-background-color: #4CAF50; -fx-text-fill: white; -fx-font-size: 14px;" text="Checkout" />
             </VBox>
 
         </VBox>
@@ -60,7 +60,7 @@
     <!-- Bottom Right: Quit Button -->
     <bottom>
         <HBox alignment="BOTTOM_RIGHT" spacing="20" style="-fx-padding: 10;">
-            <Button fx:id="quitBtn" style="-fx-background-color: #f44336; -fx-text-fill: white; -fx-font-size: 14px; -fx-background-radius: 10;" text="Quit" />
+            <Button fx:id="quitBtn" style="-fx-background-color: #f44336; -fx-text-fill: white; -fx-font-size: 14px;" text="Quit" />
         </HBox>
     </bottom>
 

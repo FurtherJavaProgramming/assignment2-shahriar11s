@@ -39,7 +39,7 @@
     <Label fx:id="status" style="-fx-text-fill: red;" />
 
     <HBox spacing="20" alignment="CENTER">
-        <Button fx:id="createUser" text="Create user" style="-fx-background-color: #4CAF50; -fx-text-fill: white; -fx-font-size: 14px; -fx-background-radius: 10;" />
-        <Button fx:id="close" text="Close" style="-fx-background-color: #f44336; -fx-text-fill: white; -fx-font-size: 14px; -fx-background-radius: 10;" />
+        <Button fx:id="createUser" text="Create user" style="-fx-background-color: #4CAF50; -fx-text-fill: white; -fx-font-size: 14px;" />
+        <Button fx:id="close" text="Close" style="-fx-background-color: #f44336; -fx-text-fill: white; -fx-font-size: 14px;" />
     </HBox>
 </VBox>

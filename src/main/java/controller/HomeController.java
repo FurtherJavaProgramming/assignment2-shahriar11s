@@ -47,6 +47,8 @@ public class HomeController {
     // MenuItem in the MenuBar
     @FXML
     private MenuItem updateProfile;
+    @FXML
+    private MenuItem viewOrders;
 
     private Stage stage;
     private Model model;
@@ -169,6 +171,25 @@ public class HomeController {
                 e.printStackTrace();
             }
         });
+        
+        viewOrders.setOnAction(event -> {
+            try {
+                FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/OrderListView.fxml"));
+                
+                // Create the controller and set it before loading the FXML
+                OrderListController orderListController = new OrderListController(new Stage(), currentUser);
+                loader.setController(orderListController);
+                
+                Pane root = loader.load();
+                
+                // Now we can call methods on the controller
+                orderListController.showStage(root);
+            } catch (Exception e) {
+                System.err.println("Error loading OrderListView: " + e.getMessage());
+                e.printStackTrace();
+            }
+        });
+
 
         // Quit button action
         quitBtn.setOnAction(event -> stage.close());
