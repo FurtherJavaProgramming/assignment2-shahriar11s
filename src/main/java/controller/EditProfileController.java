@@ -11,6 +11,7 @@ import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 import model.Model;
 import model.User;
+import util.WindowManager;
 
 public class EditProfileController {
     @FXML
@@ -133,6 +134,8 @@ public class EditProfileController {
         stage.setScene(new javafx.scene.Scene(root));
         stage.setResizable(false);
         stage.setTitle("Edit Profile");
+        WindowManager.addWindow(stage);
+        stage.setOnCloseRequest(event -> WindowManager.removeWindow(stage));
         stage.show(); 
     }
 }

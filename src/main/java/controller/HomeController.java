@@ -17,7 +17,8 @@ import javafx.stage.Stage;
 import model.Book;
 import model.Model;
 import dao.BookDao;
-import model.User;  
+import model.User;
+import util.WindowManager;
 
 import java.util.List;
 import java.util.Map;
@@ -192,7 +193,10 @@ public class HomeController {
 
 
         // Quit button action
-        quitBtn.setOnAction(event -> stage.close());
+        quitBtn.setOnAction(event -> {
+            WindowManager.closeAllWindows();
+            stage.close();
+        });
     }
 
     private double calculateTotalPrice() {
@@ -208,6 +212,7 @@ public class HomeController {
         stage.setScene(scene);
         stage.setResizable(false);
         stage.setTitle("Home");
+        WindowManager.addWindow(stage);
         stage.show();
     }
 }

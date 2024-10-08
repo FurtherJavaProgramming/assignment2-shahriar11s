@@ -12,6 +12,7 @@ import javafx.stage.Stage;
 import model.Book;
 import model.Order;
 import model.User;
+import util.WindowManager;
 import dao.BookDao;
 import dao.OrderDao;
 import model.Model;  // Add this import
@@ -88,14 +89,6 @@ public class CheckoutController {
 
     private int getTotalQuantity() {
         return cart.values().stream().mapToInt(Integer::intValue).sum();
-    }
-
-    // Show the stage
-    public void showStage(Pane root) {
-        stage.setScene(new Scene(root));
-        stage.setResizable(false);
-        stage.setTitle("Checkout");
-        stage.show();
     }
 
     @FXML
@@ -188,4 +181,15 @@ public class CheckoutController {
         parentStage.show();
         stage.close();
     }
+    
+    // Show the stage
+    public void showStage(Pane root) {
+        stage.setScene(new Scene(root));
+        stage.setResizable(false);
+        stage.setTitle("Checkout");
+        WindowManager.addWindow(stage);
+        stage.setOnCloseRequest(event -> WindowManager.removeWindow(stage));
+        stage.show();
+    }
+
 }

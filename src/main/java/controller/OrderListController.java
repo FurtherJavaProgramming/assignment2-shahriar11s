@@ -13,6 +13,7 @@ import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 import model.Order;
 import model.User;
+import util.WindowManager;
 
 import java.util.List;
 
@@ -126,6 +127,8 @@ public class OrderListController {
         stage.setScene(scene);
         stage.setResizable(false);
         stage.setTitle("Order History");
+        WindowManager.addWindow(stage);
+        stage.setOnCloseRequest(event -> WindowManager.removeWindow(stage));
         stage.show();
     }
 }

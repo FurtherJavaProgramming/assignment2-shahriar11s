@@ -9,6 +9,7 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 import model.Book;
 import model.Order;
+import util.WindowManager;
 
 import java.util.Map;
 
@@ -56,6 +57,8 @@ public class OrderDetailsPopupController {
         layout.getChildren().addAll(orderIdLabel, dateLabel, totalPriceLabel, new Label("Books:"), booksArea, closeButton);
 
         Scene scene = new Scene(layout, 400, 400);
+        WindowManager.addWindow(stage);
+        stage.setOnCloseRequest(event -> WindowManager.removeWindow(stage));
         stage.setScene(scene);
     }
 

@@ -7,6 +7,7 @@ import javafx.scene.control.Label;
 import javafx.scene.layout.Pane;
 import javafx.fxml.FXMLLoader;
 import model.Model;
+import util.WindowManager;
 import controller.LoginController;
 
 public class Main extends Application {
@@ -28,6 +29,13 @@ public class Main extends Application {
             loader.setController(loginController);
 
             Pane root = loader.load();  // Can be either GridPane or VBox
+            
+            WindowManager.addWindow(primaryStage);
+
+            // Set up the close request handler for the primary stage
+            primaryStage.setOnCloseRequest(event -> {
+                WindowManager.closeAllWindows();
+            });
 
             loginController.showStage(root); // Show the login stage
         } catch (IOException | SQLException | RuntimeException e) {

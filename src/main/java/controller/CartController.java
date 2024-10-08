@@ -13,6 +13,7 @@ import javafx.stage.Stage;
 import model.Book;
 import model.Model;
 import model.User;
+import util.WindowManager;
 import dao.BookDao;
 
 import java.util.Map;
@@ -265,7 +266,9 @@ private Button addToCartBtn;
         Scene scene = new Scene(root, 870, 473);
         stage.setScene(scene);
         stage.setResizable(false);
-        stage.setTitle("Your Cart");
+        stage.setTitle("Shopping Cart");
+        WindowManager.addWindow(stage);
+        stage.setOnCloseRequest(event -> WindowManager.removeWindow(stage));
         stage.show();
     }
 }

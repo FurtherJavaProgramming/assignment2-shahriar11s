@@ -17,6 +17,7 @@ import javafx.util.Duration;
 import model.Book;
 import model.Model;
 import model.User;
+import util.WindowManager;
 import dao.BookDao;
 
 import java.util.Map;
@@ -141,6 +142,8 @@ public class BookListController {
         stage.setScene(scene);
         stage.setResizable(false);
         stage.setTitle("List of Books");
+        WindowManager.addWindow(stage);
+        stage.setOnCloseRequest(event -> WindowManager.removeWindow(stage));
         stage.show();
     }
 }

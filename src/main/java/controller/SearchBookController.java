@@ -14,6 +14,7 @@ import javafx.stage.Stage;
 import model.Book;
 import model.Model;
 import model.User;
+import util.WindowManager;
 import dao.BookDao;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Pos;
@@ -273,7 +274,9 @@ public class SearchBookController {
         Scene scene = new Scene(root, 870, 473);
         stage.setScene(scene);
         stage.setResizable(false);
-        stage.setTitle("Search and Add Books to Cart");
+        stage.setTitle("Purchase Books");
+        WindowManager.addWindow(stage);
+        stage.setOnCloseRequest(event -> WindowManager.removeWindow(stage));
         stage.show();
     }
 }
