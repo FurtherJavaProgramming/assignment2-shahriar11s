@@ -2,6 +2,7 @@ package model;
 
 import java.sql.SQLException;
 
+import dao.BookDao;
 import dao.UserDao;
 import dao.UserDaoImpl;
 
@@ -15,7 +16,9 @@ public class Model {
 	
 	public void setup() throws SQLException {
 		userDao.setup();
+	    BookDao.populateTempStockIfRequired(); // Replace the old method with the new one
 	}
+	
 	public UserDao getUserDao() {
 		return userDao;
 	}

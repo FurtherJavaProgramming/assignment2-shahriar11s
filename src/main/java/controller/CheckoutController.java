@@ -123,23 +123,34 @@ public class CheckoutController {
     // Finalize payment and save order
     public void processOrder(User user) {
         String orderId = generateOrderId();
-        
-        // Calculate total price including tax and delivery
+
+        // Calculate final total price and tax
         double subtotal = cart.entrySet().stream()
-                .mapToDouble(entry -> entry.getKey().getPrice() * entry.getValue())
-                .sum();
-        double tax = subtotal * 0.10;  // 10% GST
+            .mapToDouble(entry -> entry.getKey().getPrice() * entry.getValue())
+            .sum();
+        double tax = subtotal * 0.10;
         double deliveryCharge = (getTotalQuantity() < 5) ? 9.99 : 0.0;
         double finalTotalPrice = subtotal + tax + deliveryCharge;
 
-        // Create the order object with the final total price
+        // Create and save the order
         Order order = new Order(orderId, cart, finalTotalPrice, null);
-        
-        // Save the order with the correct total price
-        OrderDao.saveOrder(order, user);  // Pass both Order and User
+        OrderDao.saveOrder(order, user);
 
-        // *** DO NOT update stock again here, as it was already updated when adding to the cart ***
-        
+        // *** Update both books' stock and sold copies ***
+        for (Book book : cart.keySet()) {
+            int quantity = cart.get(book);
+
+            // Step 1: Update temp_stock and push stock to main books table
+            BookDao.updateBookStockFromTemp(book.getId());  // Push stock from temp_stock to books
+
+            // Step 2: Update sold copies in books table
+            book.setSold(book.getSold() + quantity);  // Increment sold copies
+            BookDao.updateBookSold(book.getId(), book.getSold());  // Update sold copies in the database
+
+            // Clear the temp stock for the book after the transaction
+            BookDao.updateTempStock(book.getId(), book.getStock());
+        }
+
         // Show payment success message
         showAlert(Alert.AlertType.INFORMATION, "Payment Successful", "Order placed successfully!\nOrder ID: " + orderId);
 
@@ -160,7 +171,6 @@ public class CheckoutController {
             e.printStackTrace();
         }
     }
-
 
 
     private String generateOrderId() {

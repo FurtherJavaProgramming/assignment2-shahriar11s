@@ -37,7 +37,7 @@ public class CartController {
     @FXML
     private Button listBooksBtn;
     @FXML
-private Button addToCartBtn;
+    private Button addToCartBtn;
     @FXML
     private Button checkoutBtn;
     @FXML
@@ -167,7 +167,7 @@ private Button addToCartBtn;
                     Book book = getTableView().getItems().get(getIndex());
                     int quantityInCart = cart.get(book);
                     book.setStock(book.getStock() + quantityInCart);
-                    BookDao.updateBookStock(book.getId(), book.getStock());
+                    BookDao.updateTempStock(book.getId(), book.getStock());
                     cart.remove(book);
                     cartTable.getItems().remove(book);
                     totalPriceLabel.setText(calculateTotalPrice() + " AUD");
@@ -206,7 +206,7 @@ private Button addToCartBtn;
                     if (realTimeStock > 0 && currentQuantity < realTimeStock) {
                         cart.put(book, currentQuantity + 1);
                         book.setStock(book.getStock() - 1);
-                        BookDao.updateBookStock(book.getId(), book.getStock());
+                        BookDao.updateTempStock(book.getId(), book.getStock());
                         updateQuantityLabel(book);
                         cartTable.refresh();
                         totalPriceLabel.setText(calculateTotalPrice() + " AUD");
@@ -221,7 +221,7 @@ private Button addToCartBtn;
                     if (currentQuantity > 1) {
                         cart.put(book, currentQuantity - 1);
                         book.setStock(book.getStock() + 1);
-                        BookDao.updateBookStock(book.getId(), book.getStock());
+                        BookDao.updateTempStock(book.getId(), book.getStock());
                         updateQuantityLabel(book);
                         cartTable.refresh();
                         totalPriceLabel.setText(calculateTotalPrice() + " AUD");

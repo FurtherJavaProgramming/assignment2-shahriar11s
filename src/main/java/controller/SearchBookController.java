@@ -199,7 +199,7 @@ public class SearchBookController {
                 if (quantity > 0 && quantity <= selectedBook.getStock()) {
                     cart.put(selectedBook, cart.getOrDefault(selectedBook, 0) + quantity);
                     selectedBook.setStock(selectedBook.getStock() - quantity);
-                    BookDao.updateBookStock(selectedBook.getId(), selectedBook.getStock());
+                    BookDao.updateTempStock(selectedBook.getId(), selectedBook.getStock());
                     showAlert(Alert.AlertType.INFORMATION, "Success", quantity + " copies of " + selectedBook.getTitle() + " have been added to your cart.");
                     refreshBookList();
                 } else if (quantity > selectedBook.getStock()) {
