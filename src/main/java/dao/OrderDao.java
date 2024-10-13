@@ -18,8 +18,8 @@ import java.util.Map;
 public class OrderDao {
 
     // Updated saveOrder method in OrderDao.java
-	public static void saveOrder(Order order, User user) {
-        String sql = "INSERT INTO orders (username, order_number, book_id, quantity, total_price, date) VALUES (?, ?, ?, ?, ?, ?)";
+    public static void saveOrder(Order order, User user) {
+        String sql = "INSERT OR REPLACE INTO orders (username, order_number, book_id, quantity, total_price, date) VALUES (?, ?, ?, ?, ?, ?)";
         
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd hh:mm:ss a");
         String formattedDateTime = LocalDateTime.now().format(formatter);
@@ -41,39 +41,40 @@ public class OrderDao {
             System.out.println("Order saved for user: " + user.getUsername() + " | Order ID: " + order.getOrderId() + " | Date: " + formattedDateTime);
 
         } catch (SQLException e) {
+            System.err.println("Error saving order: " + e.getMessage());
             e.printStackTrace();
         }
     }
 
     // Method to retrieve all orders in reverse chronological order
-	public static List<Order> getOrders(User user) {
-	    List<Order> orders = new ArrayList<>();
-	    String sql = "SELECT DISTINCT order_number, total_price, date FROM orders WHERE username = ? ORDER BY date DESC";
+    public static List<Order> getOrders(User user) {
+        List<Order> orders = new ArrayList<>();
+        String sql = "SELECT DISTINCT order_number, total_price, date FROM orders WHERE username = ? ORDER BY date DESC";
 
-	    try (Connection connection = Database.getConnection();
-	         PreparedStatement stmt = connection.prepareStatement(sql)) {
+        try (Connection connection = Database.getConnection();
+             PreparedStatement stmt = connection.prepareStatement(sql)) {
 
-	        stmt.setString(1, user.getUsername());
-	        try (ResultSet rs = stmt.executeQuery()) {
-	            while (rs.next()) {
-	                String orderId = rs.getString("order_number");
-	                double totalPrice = rs.getDouble("total_price");
-	                String orderDate = rs.getString("date");
+            stmt.setString(1, user.getUsername());
+            try (ResultSet rs = stmt.executeQuery()) {
+                while (rs.next()) {
+                    String orderId = rs.getString("order_number");
+                    double totalPrice = rs.getDouble("total_price");
+                    String orderDate = rs.getString("date");
 
-	                System.out.println("Fetched order: Order ID: " + orderId + ", Total Price: " + totalPrice + ", Date: " + orderDate);
+                    System.out.println("Fetched order: Order ID: " + orderId + ", Total Price: " + totalPrice + ", Date: " + orderDate);
 
-	                Map<Book, Integer> cart = getCartForOrder(orderId, connection);
-	                orders.add(new Order(orderId, cart, totalPrice, orderDate));
-	            }
-	        }
-	    } catch (SQLException e) {
-	        System.err.println("Error fetching orders: " + e.getMessage());
-	        e.printStackTrace();
-	    }
+                    Map<Book, Integer> cart = getCartForOrder(orderId, connection);
+                    orders.add(new Order(orderId, cart, totalPrice, orderDate));
+                }
+            }
+        } catch (SQLException e) {
+            System.err.println("Error fetching orders: " + e.getMessage());
+            e.printStackTrace();
+        }
 
-	    System.out.println("Total orders fetched for user " + user.getUsername() + ": " + orders.size());
-	    return orders;
-	}
+        System.out.println("Total orders fetched for user " + user.getUsername() + ": " + orders.size());
+        return orders;
+    }
 
     private static Map<Book, Integer> getCartForOrder(String orderId, Connection connection) throws SQLException {
         Map<Book, Integer> cart = new HashMap<>();

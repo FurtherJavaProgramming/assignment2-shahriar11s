@@ -108,13 +108,20 @@ public class SearchBookController {
         task.setOnSucceeded(event -> {
             Platform.runLater(() -> {
                 ObservableList<Book> updatedBooks = task.getValue();
+                int selectedIndex = bookTable.getSelectionModel().getSelectedIndex();
                 bookTable.setItems(updatedBooks);
-                if (selectedBook != null) {
-                    int selectedIndex = updatedBooks.indexOf(selectedBook);
-                    if (selectedIndex >= 0) {
-                        bookTable.getSelectionModel().select(selectedIndex);
+                if (selectedIndex >= 0 && selectedIndex < updatedBooks.size()) {
+                    bookTable.getSelectionModel().select(selectedIndex);
+                    selectedBook = bookTable.getItems().get(selectedIndex);
+                } else if (selectedBook != null) {
+                    int newIndex = updatedBooks.indexOf(selectedBook);
+                    if (newIndex >= 0) {
+                        bookTable.getSelectionModel().select(newIndex);
+                    } else {
+                        selectedBook = null;
                     }
                 }
+                bookTable.refresh(); // Ensure the table is refreshed to show updated stock
             });
         });
 
