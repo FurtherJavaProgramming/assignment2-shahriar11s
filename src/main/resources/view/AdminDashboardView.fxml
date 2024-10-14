@@ -46,6 +46,7 @@
     <!-- Bottom Right: Quit Button -->
     <bottom>
         <HBox alignment="BOTTOM_RIGHT" spacing="20" style="-fx-padding: 10;">
+            <Button fx:id="logoutBtn" style="-fx-background-color: #007bff; -fx-text-fill: white; -fx-font-size: 14px;" text="Logout" />
             <Button fx:id="quitBtn" style="-fx-background-color: #f44336; -fx-text-fill: white; -fx-font-size: 14px;" text="Quit" />
         </HBox>
     </bottom>

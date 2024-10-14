@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+
+<VBox alignment="TOP_CENTER" spacing="20" style="-fx-background-color: #f4f4f4;" xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml">
+    <padding>
+        <Insets top="20" right="20" bottom="20" left="20"/>
+    </padding>
+
+    <TableView fx:id="usersTable" VBox.vgrow="ALWAYS" style="-fx-border-color: #ddd; -fx-border-width: 1;">
+        <columns>
+            <TableColumn fx:id="nameColumn" text="Name" prefWidth="290"/>
+            <TableColumn fx:id="totalPurchaseColumn" text="Total Purchase Value" prefWidth="180"/>
+            <TableColumn fx:id="totalOrdersColumn" text="Total Orders" prefWidth="140"/>
+            <TableColumn fx:id="orderDetailsColumn" text="Order Details" prefWidth="200"/>
+        </columns>
+    </TableView>
+
+    <HBox alignment="CENTER">
+        <Button fx:id="closeButton" text="Close" style="-fx-background-color: #ff4444; -fx-text-fill: white;"/>
+    </HBox>
+</VBox>

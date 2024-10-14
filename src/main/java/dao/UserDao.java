@@ -1,6 +1,8 @@
 package dao;
 
 import java.sql.SQLException;
+import java.util.List;
+
 import model.User;
 
 /**
@@ -30,4 +32,6 @@ public interface UserDao {
             System.out.println("Admin account initialized in the database.");
         }
     }
+    
+    List<User> getAllUsers() throws SQLException;
 }

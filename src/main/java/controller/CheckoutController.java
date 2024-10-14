@@ -1,5 +1,6 @@
 package controller;
 
+import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
@@ -8,6 +9,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
 import model.Book;
 import model.Order;
@@ -93,97 +95,92 @@ public class CheckoutController {
 
     @FXML
     public void onProceedPayment() {
-        try {
-            // Load the PaymentPopup.fxml file
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/PaymentPopup.fxml"));
+        Platform.runLater(() -> {
+            try {
+                FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/PaymentPopup.fxml"));
+                PaymentPopupController paymentPopupController = new PaymentPopupController();
+                loader.setController(paymentPopupController);
 
-            // Set the controller explicitly (PaymentPopupController)
-            PaymentPopupController paymentPopupController = new PaymentPopupController();
-            loader.setController(paymentPopupController);
+                VBox paymentRoot = loader.load();
 
-            // Since PaymentPopup.fxml uses VBox, cast to VBox instead of GridPane
-            VBox paymentRoot = loader.load();
+                Stage paymentStage = new Stage();
+                paymentStage.initModality(Modality.APPLICATION_MODAL);
+                paymentStage.initOwner(stage);
+                paymentStage.setTitle("Payment Details");
+                paymentStage.setScene(new Scene(paymentRoot, 350, 300));
 
-            // Create a new payment window
-            Stage paymentStage = new Stage();
-            paymentStage.setTitle("Payment Details");
-            paymentStage.setScene(new Scene(paymentRoot, 400, 250));
-            paymentStage.show();
+                paymentPopupController.setPaymentStage(paymentStage);
+                paymentPopupController.setCheckoutController(this);
+                paymentPopupController.setCurrentUser(currentUser);
 
-            // Pass the necessary data to the controller
-            paymentPopupController.setPaymentStage(paymentStage);
-            paymentPopupController.setCheckoutController(this);
-            paymentPopupController.setCurrentUser(currentUser);  // Pass currentUser to PaymentPopupController
-
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+                paymentStage.showAndWait();
+            } catch (Exception e) {
+                e.printStackTrace();
+                showAlert(Alert.AlertType.ERROR, "Error", "An error occurred while processing the payment.");
+            }
+        });
     }
 
-    // Finalize payment and save order
     public void processOrder(User user) {
-        String orderId = generateOrderId();
+        Platform.runLater(() -> {
+            String orderId = generateOrderId();
 
-        // Calculate final total price and tax
-        double subtotal = cart.entrySet().stream()
-            .mapToDouble(entry -> entry.getKey().getPrice() * entry.getValue())
-            .sum();
-        double tax = subtotal * 0.10;
-        double deliveryCharge = (getTotalQuantity() < 5) ? 9.99 : 0.0;
-        double finalTotalPrice = subtotal + tax + deliveryCharge;
+            double subtotal = cart.entrySet().stream()
+                .mapToDouble(entry -> entry.getKey().getPrice() * entry.getValue())
+                .sum();
+            double tax = subtotal * 0.10;
+            double deliveryCharge = (getTotalQuantity() < 5) ? 9.99 : 0.0;
+            double finalTotalPrice = subtotal + tax + deliveryCharge;
 
-        // Create and save the order
-        Order order = new Order(orderId, cart, finalTotalPrice, null);
-        OrderDao.saveOrder(order, user);
+            Order order = new Order(orderId, cart, finalTotalPrice, null);
+            OrderDao.saveOrder(order, user);
 
-        // *** Update both books' stock and sold copies ***
-        for (Book book : cart.keySet()) {
-            int quantity = cart.get(book);
+            for (Book book : cart.keySet()) {
+                int quantity = cart.get(book);
+                BookDao.updateBookStockFromTemp(book.getId());
+                book.setSold(book.getSold() + quantity);
+                BookDao.updateBookSold(book.getId(), book.getSold());
+                BookDao.updateTempStock(book.getId(), book.getStock());
+            }
 
-            // Step 1: Update temp_stock and push stock to main books table
-            BookDao.updateBookStockFromTemp(book.getId());  // Push stock from temp_stock to books
+            showAlert(Alert.AlertType.INFORMATION, "Payment Successful", "Order placed successfully!\nOrder ID: " + orderId);
 
-            // Step 2: Update sold copies in books table
-            book.setSold(book.getSold() + quantity);  // Increment sold copies
-            BookDao.updateBookSold(book.getId(), book.getSold());  // Update sold copies in the database
+            cart.clear();
 
-            // Clear the temp stock for the book after the transaction
-            BookDao.updateTempStock(book.getId(), book.getStock());
-        }
+            // Navigate back to Home view
+            navigateToHome();
+        });
+    }
 
-        // Show payment success message
-        showAlert(Alert.AlertType.INFORMATION, "Payment Successful", "Order placed successfully!\nOrder ID: " + orderId);
-
-        // Clear the cart after placing the order
-        cart.clear();
-
-        // Load and show the homepage after the order is placed
+    private void navigateToHome() {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/HomeView.fxml"));
-            HomeController homeController = new HomeController(stage, this.model, this.cart, currentUser);  // Pass model, cart, and user
+            HomeController homeController = new HomeController(parentStage, this.model, this.cart, currentUser);
             loader.setController(homeController);
 
             Pane root = loader.load();
-            Scene homeScene = new Scene(root);
-            stage.setScene(homeScene);  // Set the new scene to the stage
-            stage.show();  // Show the homepage
+            homeController.showStage(root);
+            
+            // Close the Checkout stage
+            stage.close();
         } catch (IOException e) {
             e.printStackTrace();
+            showAlert(Alert.AlertType.ERROR, "Navigation Error", "Error loading HomeView: " + e.getMessage());
         }
     }
-
 
     private String generateOrderId() {
         return "ORD" + System.currentTimeMillis();
     }
 
-    // Utility function to show alerts
     private void showAlert(Alert.AlertType alertType, String title, String message) {
-        Alert alert = new Alert(alertType);
-        alert.setTitle(title);
-        alert.setHeaderText(null);
-        alert.setContentText(message);
-        alert.showAndWait();
+        Platform.runLater(() -> {
+            Alert alert = new Alert(alertType);
+            alert.setTitle(title);
+            alert.setHeaderText(null);
+            alert.setContentText(message);
+            alert.showAndWait();
+        });
     }
 
     @FXML
@@ -192,9 +189,10 @@ public class CheckoutController {
         stage.close();
     }
     
-    // Show the stage
     public void showStage(Pane root) {
-        stage.setScene(new Scene(root));
+        VBox vboxRoot = (VBox) root;
+        Scene scene = new Scene(vboxRoot, 870, 473);
+        stage.setScene(scene);
         stage.setResizable(false);
         stage.setTitle("Checkout");
         WindowManager.addWindow(stage);

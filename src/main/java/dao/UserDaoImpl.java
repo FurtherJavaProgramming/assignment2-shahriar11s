@@ -5,6 +5,9 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
+import java.util.List;
+
 import model.User;
 
 public class UserDaoImpl implements UserDao {
@@ -78,5 +81,24 @@ public class UserDaoImpl implements UserDao {
 
             stmt.executeUpdate();
         }
+    }
+    
+    @Override
+    public List<User> getAllUsers() throws SQLException {
+        List<User> users = new ArrayList<>();
+        String sql = "SELECT * FROM " + TABLE_NAME;
+        try (Connection connection = Database.getConnection();
+             PreparedStatement stmt = connection.prepareStatement(sql);
+             ResultSet rs = stmt.executeQuery()) {
+            while (rs.next()) {
+                users.add(new User(
+                    rs.getString("username"),
+                    rs.getString("password"),
+                    rs.getString("first_name"),
+                    rs.getString("last_name")
+                ));
+            }
+        }
+        return users;
     }
 }

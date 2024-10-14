@@ -4,11 +4,14 @@ import java.io.IOException;
 import java.util.List;
 
 import dao.BookDao;
+import dao.OrderDao;
+import dao.UserDaoImpl;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
@@ -31,6 +34,8 @@ public class AdminDashboardController {
     private Button addNewBookBtn;
     @FXML
     private Button viewUsersBtn;
+    @FXML 
+    private Button logoutBtn;
     @FXML
     private Button quitBtn;
     @FXML
@@ -70,10 +75,11 @@ public class AdminDashboardController {
         // Load books into the table
         loadTopSellingBooks();
 
-        // Add button handlers
+        // button handlers
         manageBooksBtn.setOnAction(e -> handleManageBooksAction());
         addNewBookBtn.setOnAction(e -> handleAddNewBookAction());
         viewUsersBtn.setOnAction(e -> handleViewUsersAction());
+        logoutBtn.setOnAction(e -> handleLogout());
         quitBtn.setOnAction(e -> handleQuitAction());
     }
 
@@ -114,7 +120,47 @@ public class AdminDashboardController {
 
     // Handle the View Users button click (Placeholder functionality)
     private void handleViewUsersAction() {
-        System.out.println("View Users button clicked! Functionality to be implemented.");
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/ViewUsersView.fxml"));
+            ViewUsersController viewUsersController = new ViewUsersController(new Stage(), this.stage, new UserDaoImpl(), new OrderDao());
+            loader.setController(viewUsersController);
+            Pane root = loader.load();
+            viewUsersController.showStage(root);
+        } catch (IOException e) {
+            e.printStackTrace();
+            showAlert(Alert.AlertType.ERROR, "Error", "Failed to load View Users window: " + e.getMessage());
+        }
+    }
+
+    private void showAlert(Alert.AlertType alertType, String title, String content) {
+        Alert alert = new Alert(alertType);
+        alert.setTitle(title);
+        alert.setHeaderText(null);
+        alert.setContentText(content);
+        alert.showAndWait();
+    }
+    
+    // Handle Logout actions
+    private void handleLogout() {
+        try {
+            // Load the LoginView.fxml
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/LoginView.fxml"));
+            LoginController loginController = new LoginController(new Stage(), model);
+            loader.setController(loginController);
+
+            Pane root = loader.load();
+            
+            // Reset the stage and show the login screen again
+            loginController.showStage(root);
+            
+            // Close the current admin dashboard window
+            stage.close();
+            
+        } catch (IOException e) {
+            System.err.println("Error loading LoginView.fxml: " + e.getMessage());
+            e.printStackTrace();
+            showAlert(Alert.AlertType.ERROR, "Error", "Failed to load Login window: " + e.getMessage());
+        }
     }
 
     // Handle the Quit button

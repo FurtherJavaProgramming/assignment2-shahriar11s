@@ -261,7 +261,7 @@ public class HomeController {
 
 
 
-	public void showStage(Pane root) {
+    public void showStage(Pane root) {
         Scene scene = new Scene(root, 870, 473);
         stage.setScene(scene);
         stage.setResizable(false);
