@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Region?>
+<?import javafx.scene.layout.VBox?>
+
+<BorderPane xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" prefHeight="600.0" prefWidth="870.0">
+
+    <!-- Top Bar with "Go Back", "Add New Book", and "Update Books" buttons -->
+    <top>
+        <HBox spacing="10" style="-fx-padding: 20;">
+            <!-- Go Back Button aligned to the left -->
+            <Button fx:id="goBackBtn" text="Go Back" style="-fx-background-color: #007bff; -fx-text-fill: white;" />
+            <!-- Spacer Region to push other buttons to the right -->
+            <Region HBox.hgrow="ALWAYS"/>
+            <!-- Update Books and Add New Book buttons aligned to the right with exact alignment -->
+            <HBox spacing="10">
+                
+                <Button fx:id="cancelUpdateBtn" text="Cancel" style="-fx-background-color: #f44336; -fx-text-fill: white;" visible="false"/>
+                <Button fx:id="confirmUpdateBtn" text="Update" style="-fx-background-color: #4CAF50; -fx-text-fill: white;" visible="false"/>
+                <Button fx:id="updateBooksBtn" text="Update Books" style="-fx-background-color: #4CAF50; -fx-text-fill: white;" />
+                <Button fx:id="addNewBookBtn" text="Add New Book" style="-fx-background-color: #4CAF50; -fx-text-fill: white;" />
+            </HBox>
+        </HBox>
+    </top>
+
+    <!-- Table for Managing Books -->
+    <center>
+        <VBox alignment="TOP_CENTER" spacing="10" style="-fx-padding: 20;">
+            <TableView fx:id="booksTable" prefHeight="500" prefWidth="850">
+                <columns>
+                    <TableColumn fx:id="titleCol" text="Title" prefWidth="200"/>
+                    <TableColumn fx:id="authorCol" text="Author" prefWidth="200"/>
+                    <TableColumn fx:id="priceCol" text="Price" prefWidth="100"/>
+                    <TableColumn fx:id="stockCol" text="Stock" prefWidth="100"/>
+                    <TableColumn fx:id="soldCol" text="Sold Copies" prefWidth="100"/>
+                    <!-- New column for Delete button and stock adjustment -->
+                    <TableColumn fx:id="actionCol" text="Actions" prefWidth="150" visible="false"/>
+                </columns>
+            </TableView>
+        </VBox>
+    </center>
+
+</BorderPane>

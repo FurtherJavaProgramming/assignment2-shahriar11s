@@ -37,6 +37,32 @@ public class BookDao {
         }
         return books;
     }
+    
+    public static List<Book> getAdminBookList() {
+        List<Book> books = new ArrayList<>();
+        String sql = "SELECT * FROM books";
+
+        try (Connection connection = Database.getConnection();
+             PreparedStatement stmt = connection.prepareStatement(sql);
+             ResultSet rs = stmt.executeQuery()) {
+
+            while (rs.next()) {
+                Book book = new Book(
+                    rs.getInt("id"),
+                    rs.getString("title"),
+                    rs.getString("author"),
+                    rs.getDouble("price"),
+                    rs.getInt("stock"),
+                    rs.getInt("sold")
+                );
+                books.add(book);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return books;
+    }
+
 
     // Method to search for books by keyword (matches title or author)
     public static List<Book> searchBooks(String keyword) {
@@ -267,5 +293,68 @@ public class BookDao {
             e.printStackTrace();
         }
     }
+    
+    // Add a new book to the database
+    public static void addNewBook(Book book) {
+        String sql = "INSERT INTO books (id, title, author, price, stock, sold) VALUES (?, ?, ?, ?, ?, ?)";
 
+        try (Connection connection = Database.getConnection();
+             PreparedStatement stmt = connection.prepareStatement(sql)) {
+            stmt.setInt(1, book.getId());
+            stmt.setString(2, book.getTitle());
+            stmt.setString(3, book.getAuthor());
+            stmt.setDouble(4, book.getPrice());
+            stmt.setInt(5, book.getStock());
+            stmt.setInt(6, book.getSold());
+            stmt.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    // New method to update the stock of a book
+    public static void updateBookStock(Book book) {
+        String sql = "UPDATE books SET stock = ? WHERE id = ?";
+
+        try (Connection connection = Database.getConnection();
+             PreparedStatement stmt = connection.prepareStatement(sql)) {
+            stmt.setInt(1, book.getStock());
+            stmt.setInt(2, book.getId());
+            stmt.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+    
+    // Method to get the highest book ID from the books table
+    public static int getHighestBookId() {
+        String sql = "SELECT MAX(id) AS max_id FROM books";
+        int highestId = 0;
+
+        try (Connection connection = Database.getConnection();
+             PreparedStatement stmt = connection.prepareStatement(sql);
+             ResultSet rs = stmt.executeQuery()) {
+
+            if (rs.next()) {
+                highestId = rs.getInt("max_id");
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return highestId;
+    }
+    
+    // deleteBook method
+    public static void deleteBook(int bookId) {
+        String sql = "DELETE FROM books WHERE id = ?";
+
+        try (Connection connection = Database.getConnection();
+             PreparedStatement stmt = connection.prepareStatement(sql)) {
+            stmt.setInt(1, bookId);
+            stmt.executeUpdate();
+            System.out.println("Book with ID " + bookId + " has been deleted.");
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
 }

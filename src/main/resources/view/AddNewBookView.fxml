@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+
+<VBox xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" spacing="10" alignment="CENTER" style="-fx-padding: 20;">
+    <Label text="Add New Book" style="-fx-font-size: 20px;"/>
+    <TextField fx:id="titleField" promptText="Title" />
+    <TextField fx:id="authorField" promptText="Author" />
+    <TextField fx:id="priceField" promptText="Price" />
+    <TextField fx:id="stockField" promptText="Stock" />
+
+    <HBox spacing="10" alignment="CENTER">
+        <Button fx:id="addBookBtn" text="Add" />
+        <Button fx:id="cancelBtn" text="Cancel" />
+    </HBox>
+</VBox>

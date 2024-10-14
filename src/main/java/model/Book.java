@@ -6,7 +6,7 @@ public class Book {
     private String author;
     private double price;
     private int stock;
-    private int sold; // New field for sold copies
+    private int sold;
 
     public Book(int id, String title, String author, double price, int stock, int sold) {
         this.id = id;
