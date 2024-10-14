@@ -35,9 +35,9 @@
         <Button text="Change Password" fx:id="changePasswordBtn" 
                 style="-fx-background-color: linear-gradient(to bottom, #00b4db, #0083b0); -fx-text-fill: white;"/>
         <Button text="Save" fx:id="saveBtn" 
-                style="-fx-background-color: #4CAF50; -fx-text-fill: white; -fx-background-radius: 10;"/>
+                style="-fx-background-color: #4CAF50; -fx-text-fill: white;"/>
         <Button text="Cancel" fx:id="cancelBtn" 
-                style="-fx-background-color: #f44336; -fx-text-fill: white; -fx-background-radius: 10;"/>
+                style="-fx-background-color: #f44336; -fx-text-fill: white;"/>
     </HBox>
 
 </GridPane>

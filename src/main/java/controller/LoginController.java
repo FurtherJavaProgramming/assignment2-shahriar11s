@@ -43,45 +43,60 @@ public class LoginController {
 
     @FXML
     public void initialize() {        
-        login.setOnAction(event -> {
-            if (!name.getText().isEmpty() && !password.getText().isEmpty()) {
-                User user;
-                try {
-                    user = model.getUserDao().getUser(name.getText(), password.getText());
-                    if (user != null) {
-                        System.out.println("User authenticated successfully."); // Debugging print
-                        model.setCurrentUser(user);
-                        try {
-                            System.out.println("Loading HomeView.fxml...");  // Debugging print
-                            FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/HomeView.fxml"));
-                            
-                            // Pass cart to HomeController along with stage, model, and currentUser
-                            HomeController homeController = new HomeController(stage, model, cart, user);  // Updated constructor
-                            loader.setController(homeController);
-                            
-                            BorderPane root = loader.load();  // BorderPane instead of VBox
-                            System.out.println("HomeView loaded successfully.");  // Debugging print
-                            homeController.showStage(root);  // Pass the root to the showStage method
-                            
-                        } catch (IOException e) {
-                            message.setText(e.getMessage());
-                            e.printStackTrace(); // Print the error to the console
-                        }
-                    } else {
-                        message.setText("Wrong username or password");
-                        System.out.println("Authentication failed."); // Debugging print
-                    }
-                } catch (SQLException e) {
-                    message.setText(e.getMessage());
-                    e.printStackTrace(); // Print the error to the console
-                }
-            } else {
-                message.setText("Empty username or password");
-                System.out.println("Empty username or password."); // Debugging print
-            }
-            name.clear();
-            password.clear();
-        });
+    	login.setOnAction(event -> {
+    	    if (!name.getText().isEmpty() && !password.getText().isEmpty()) {
+    	        User user;
+    	        try {
+    	            user = model.getUserDao().getUser(name.getText(), password.getText());
+    	            if (user != null) {
+    	                System.out.println("User authenticated successfully.");
+    	                model.setCurrentUser(user);
+
+    	                // Check if the user is an admin
+    	                if (user.getUsername().equals("admin")) {
+    	                    // Load Admin Dashboard for admin user
+    	                    try {
+    	                        FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/AdminDashboardView.fxml"));
+    	                        AdminDashboardController adminController = new AdminDashboardController(stage, model, user);
+    	                        loader.setController(adminController);
+
+    	                        Pane root = loader.load();
+    	                        adminController.showStage(root);
+
+    	                    } catch (IOException e) {
+    	                        message.setText(e.getMessage());
+    	                        e.printStackTrace();
+    	                    }
+    	                } else {
+    	                    // Regular user home screen
+    	                    try {
+    	                        FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/HomeView.fxml"));
+    	                        HomeController homeController = new HomeController(stage, model, cart, user);
+    	                        loader.setController(homeController);
+
+    	                        BorderPane root = loader.load();
+    	                        homeController.showStage(root);
+    	                    } catch (IOException e) {
+    	                        message.setText(e.getMessage());
+    	                        e.printStackTrace();
+    	                    }
+    	                }
+    	            } else {
+    	                message.setText("Wrong username or password");
+    	                System.out.println("Authentication failed.");
+    	            }
+    	        } catch (SQLException e) {
+    	            message.setText(e.getMessage());
+    	            e.printStackTrace();
+    	        }
+    	    } else {
+    	        message.setText("Empty username or password");
+    	        System.out.println("Empty username or password.");
+    	    }
+    	    name.clear();
+    	    password.clear();
+    	});
+
 
         signup.setOnAction(event -> {
             try {
@@ -93,7 +108,7 @@ public class LoginController {
                 stage.close();
             } catch (IOException e) {
                 message.setText(e.getMessage());
-                e.printStackTrace(); // Print the error to the console
+                e.printStackTrace(); 
             }
         });
     }
@@ -103,16 +118,16 @@ public class LoginController {
         stage.setScene(scene);
         stage.setResizable(false);
         stage.setTitle("Welcome");
-        stage.show();  // Correct typo
+        stage.show();  
     }
 
     // Method to reset the login screen after logout
     public void resetLoginScreen() {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/LoginView.fxml"));
-            loader.setController(this); // Set this controller again
+            loader.setController(this); 
             Pane root = loader.load();
-            showStage(root); // Show the login stage again
+            showStage(root); 
         } catch (IOException e) {
             e.printStackTrace();
         }

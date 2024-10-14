@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.VBox?>
+
+<VBox xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1"
+      alignment="CENTER" spacing="20">
+    <Label fx:id="adminWelcomeLabel" text="Welcome, Admin!" style="-fx-font-size: 24px; -fx-font-weight: bold;"/> <!-- Updated ID -->
+</VBox>
