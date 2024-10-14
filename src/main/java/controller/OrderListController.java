@@ -10,12 +10,20 @@ import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.Pane;
+import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import model.Order;
 import model.User;
 import util.WindowManager;
 
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class OrderListController {
     @FXML
@@ -30,6 +38,8 @@ public class OrderListController {
     private TableColumn<Order, Void> detailsCol;
     @FXML
     private Button closeButton;
+    @FXML
+    private Button exportButton; // New export button
 
     private Stage stage;
     private User currentUser;
@@ -51,6 +61,12 @@ public class OrderListController {
         setupDetailsColumn();
 
         loadOrders();
+
+        // Set action for export button
+        exportButton.setOnAction(event -> handleExport());
+        
+        // Enable multiple selection
+        orderTable.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
     }
 
     private void setupDetailsColumn() {
@@ -117,6 +133,62 @@ public class OrderListController {
         new Thread(task).start();
     }
 
+    // New method to handle exporting orders
+    @FXML
+    private void handleExport() {
+        // Check if any orders are selected
+        ObservableList<Order> selectedOrders = orderTable.getSelectionModel().getSelectedItems();
+        if (selectedOrders.isEmpty()) {
+            showAlert(Alert.AlertType.WARNING, "No Orders Selected", "Please select one or more orders to export.");
+            return;
+        }
+
+        // Generate default file name using current date and time
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMdd_HHmmss");
+        String defaultFileName = "Orders_" + LocalDateTime.now().format(formatter) + ".csv";
+
+        // Open FileChooser for the user to select the destination file
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.setTitle("Save Orders");
+        fileChooser.setInitialFileName(defaultFileName);
+        fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("CSV Files", "*.csv"));
+        File file = fileChooser.showSaveDialog(stage);
+
+        if (file != null) {
+            exportOrdersToCSV(file, selectedOrders);
+        }
+    }
+
+    // Method to generate the list of books for a specific order
+    private String getBooksList(Order order) {
+        return order.getCart().entrySet().stream()
+            .map(entry -> entry.getKey().getTitle() + " (" + entry.getValue() + ")")
+            .collect(Collectors.joining("; "));  // Separate each book with a semicolon
+    }
+
+    // Method to export selected orders to a CSV file
+    private void exportOrdersToCSV(File file, List<Order> selectedOrders) {
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(file))) {
+            // Write header
+            writer.write("Order ID,Date,Total Price (AUD),Books\n");
+
+            // Write order details for each selected order
+            for (Order order : selectedOrders) {
+                // Use the helper method to generate the book list
+                String booksList = getBooksList(order);
+
+                writer.write(order.getOrderId() + "," + order.getOrderDate() + "," + order.getTotalPrice() + "," + booksList + "\n");
+            }
+
+            writer.flush();
+            showAlert(Alert.AlertType.INFORMATION, "Export Successful", "Orders exported successfully!");
+
+        } catch (IOException e) {
+            showAlert(Alert.AlertType.ERROR, "Export Failed", "An error occurred while exporting orders: " + e.getMessage());
+            e.printStackTrace();
+        }
+    }
+
     @FXML
     private void handleClose() {
         stage.close();
@@ -130,5 +202,14 @@ public class OrderListController {
         WindowManager.addWindow(stage);
         stage.setOnCloseRequest(event -> WindowManager.removeWindow(stage));
         stage.show();
+    }
+
+    // Utility function to show alerts
+    private void showAlert(Alert.AlertType alertType, String title, String message) {
+        Alert alert = new Alert(alertType);
+        alert.setTitle(title);
+        alert.setHeaderText(null);
+        alert.setContentText(message);
+        alert.showAndWait();
     }
 }

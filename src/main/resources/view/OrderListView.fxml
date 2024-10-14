@@ -6,10 +6,18 @@
 
 <VBox xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" 
       alignment="TOP_CENTER" spacing="20" prefWidth="870" prefHeight="473">
+    
     <padding>
         <Insets top="20" right="20" bottom="20" left="20"/>
     </padding>
-    <Label text="Order History" style="-fx-font-size: 24px; -fx-font-weight: bold;" />
+    
+    <!-- HBox for Title and Export Orders Button -->
+    <HBox alignment="CENTER" spacing="20" prefWidth="870">
+        <Label text="Order History" style="-fx-font-size: 24px; -fx-font-weight: bold;" />
+        <Pane HBox.hgrow="ALWAYS"/> <!-- Spacer to push the button to the right -->
+        <Button fx:id="exportButton" text="Export Orders" onAction="#handleExport" style="-fx-background-color: #4CAF50; -fx-text-fill: white; -fx-font-size: 14px;" />
+    </HBox>
+    
     <TableView fx:id="orderTable" VBox.vgrow="ALWAYS">
         <columns>
             <TableColumn fx:id="orderNumberCol" text="Order Number" prefWidth="200" />
@@ -18,5 +26,7 @@
             <TableColumn fx:id="detailsCol" text="Details" prefWidth="200" />
         </columns>
     </TableView>
+    
     <Button fx:id="closeButton" text="Close" onAction="#handleClose" style="-fx-background-color: #f44336; -fx-text-fill: white; -fx-font-size: 14px;" />
+    
 </VBox>
