@@ -13,11 +13,11 @@ import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.Pane;
-import javafx.scene.layout.BorderPane; // Update here
+import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
 import model.Model;
 import model.User;
-import model.Book;  // Import Book model
+import model.Book; // Import Book model
 
 public class LoginController {
     @FXML
@@ -63,8 +63,6 @@ public class LoginController {
                             System.out.println("HomeView loaded successfully.");  // Debugging print
                             homeController.showStage(root);  // Pass the root to the showStage method
                             
-                            // Commenting this out to prevent closing the main stage too early
-                            // stage.close();
                         } catch (IOException e) {
                             message.setText(e.getMessage());
                             e.printStackTrace(); // Print the error to the console
@@ -105,6 +103,18 @@ public class LoginController {
         stage.setScene(scene);
         stage.setResizable(false);
         stage.setTitle("Welcome");
-        stage.show(); 
+        stage.show();  // Correct typo
+    }
+
+    // Method to reset the login screen after logout
+    public void resetLoginScreen() {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/LoginView.fxml"));
+            loader.setController(this); // Set this controller again
+            Pane root = loader.load();
+            showStage(root); // Show the login stage again
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 }

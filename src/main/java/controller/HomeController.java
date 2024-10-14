@@ -20,6 +20,7 @@ import dao.BookDao;
 import model.User;
 import util.WindowManager;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 
@@ -50,6 +51,8 @@ public class HomeController {
     private MenuItem updateProfile;
     @FXML
     private MenuItem viewOrders;
+    @FXML
+    private MenuItem logoutButton;
 
     private Stage stage;
     private Model model;
@@ -173,6 +176,7 @@ public class HomeController {
             }
         });
         
+        // View Orders MenuItem action
         viewOrders.setOnAction(event -> {
             try {
                 FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/OrderListView.fxml"));
@@ -190,6 +194,9 @@ public class HomeController {
                 e.printStackTrace();
             }
         });
+        
+        // Log Out MenuItem action
+        logoutButton.setOnAction(event -> handleLogout()); // Call the log-out method
 
 
         // Quit button action
@@ -198,6 +205,30 @@ public class HomeController {
             stage.close();
         });
     }
+    
+    // Method to handle Logout
+    @FXML
+    private void handleLogout() {
+        try {
+            // Load the LoginView.fxml
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/LoginView.fxml"));
+            LoginController loginController = new LoginController(new Stage(), model);
+            loader.setController(loginController);
+
+            Pane root = loader.load();  // Load the FXML
+            
+            // Reset the stage and show the login screen again
+            loginController.showStage(root);  // Display the login screen
+            
+            // Close the current home window (log out)
+            stage.close();
+            
+        } catch (IOException e) {
+            System.err.println("Error loading LoginView.fxml: " + e.getMessage());
+            e.printStackTrace();
+        }
+    }
+
 
     private double calculateTotalPrice() {
         return cart.entrySet().stream()

@@ -19,8 +19,9 @@
             <menus>
                 <Menu fx:id="profile" mnemonicParsing="false" text="Profile">
                     <items>
-                        <MenuItem fx:id="updateProfile" mnemonicParsing="false" text="Update Profile" />
-                        <MenuItem fx:id="viewOrders" mnemonicParsing="false" text="View All Orders" /> <!-- New item for orders -->
+                        <MenuItem fx:id="updateProfile" mnemonicParsing="false" text="Update Profile" /> <!-- Edit Profile Button -->
+                        <MenuItem fx:id="viewOrders" mnemonicParsing="false" text="View All Orders" /> <!-- Order Detials Button -->
+                        <MenuItem fx:id="logoutButton" text="Log Out" onAction="#handleLogout"/> <!-- Logout Button -->
                     </items>
                 </Menu>
             </menus>
