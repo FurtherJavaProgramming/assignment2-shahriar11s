@@ -9,6 +9,7 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.MenuItem;
+import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
@@ -76,10 +77,32 @@ public class HomeController {
             welcomeLabel.setText("Welcome!");
         }
 
-        //table for top books
+        // Set up the table columns
         titleCol.setCellValueFactory(new PropertyValueFactory<>("title"));
         authorCol.setCellValueFactory(new PropertyValueFactory<>("author"));
         soldCol.setCellValueFactory(new PropertyValueFactory<>("sold"));
+
+        // Center-align the "Sold Copies" column
+        soldCol.setStyle("-fx-alignment: CENTER;");
+
+        // Custom cell factory for the "Sold Copies" column to ensure center alignment
+        soldCol.setCellFactory(new javafx.util.Callback<TableColumn<Book, Integer>, TableCell<Book, Integer>>() {
+            @Override
+            public TableCell<Book, Integer> call(TableColumn<Book, Integer> param) {
+                return new TableCell<Book, Integer>() {
+                    @Override
+                    protected void updateItem(Integer sold, boolean empty) {
+                        super.updateItem(sold, empty);
+                        if (empty || sold == null) {
+                            setText(null);
+                        } else {
+                            setText(sold.toString());
+                            setAlignment(javafx.geometry.Pos.CENTER);
+                        }
+                    }
+                };
+            }
+        });
 
         // Load and display the top 5 popular books based on the number of sold copies
         List<Book> topBooks = BookDao.getTopBooks(5);

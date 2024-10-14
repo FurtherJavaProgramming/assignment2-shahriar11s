@@ -10,6 +10,7 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
+import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import model.Book;
 import model.Model;
@@ -17,6 +18,7 @@ import model.User;
 import util.WindowManager;
 import dao.BookDao;
 import javafx.fxml.FXMLLoader;
+import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.concurrent.Task;
 import javafx.animation.KeyFrame;
@@ -73,11 +75,44 @@ public class SearchBookController {
 
     @FXML
     public void initialize() {
-        idCol.setCellValueFactory(new PropertyValueFactory<>("id"));
+    	// Hide the ID column
+        idCol.setVisible(false);
+
         titleCol.setCellValueFactory(new PropertyValueFactory<>("title"));
         authorCol.setCellValueFactory(new PropertyValueFactory<>("author"));
         priceCol.setCellValueFactory(new PropertyValueFactory<>("price"));
         stockCol.setCellValueFactory(new PropertyValueFactory<>("stock"));
+
+        // Center-align Price and Available Stock columns
+        priceCol.setStyle("-fx-alignment: CENTER;");
+        stockCol.setStyle("-fx-alignment: CENTER;");
+
+        // Custom cell factories for center alignment and formatting
+        priceCol.setCellFactory(column -> new TableCell<Book, Double>() {
+            @Override
+            protected void updateItem(Double price, boolean empty) {
+                super.updateItem(price, empty);
+                if (empty || price == null) {
+                    setText(null);
+                } else {
+                    setText(String.format("%.2f", price));
+                    setAlignment(Pos.CENTER);
+                }
+            }
+        });
+
+        stockCol.setCellFactory(column -> new TableCell<Book, Integer>() {
+            @Override
+            protected void updateItem(Integer stock, boolean empty) {
+                super.updateItem(stock, empty);
+                if (empty || stock == null) {
+                    setText(null);
+                } else {
+                    setText(stock.toString());
+                    setAlignment(Pos.CENTER);
+                }
+            }
+        });
 
         bookTable.getSelectionModel().selectedItemProperty().addListener((obs, oldSelection, newSelection) -> {
             selectedBook = newSelection;
@@ -157,34 +192,41 @@ public class SearchBookController {
     private void addToCart() {
         if (selectedBook != null) {
             Dialog<Integer> dialog = new Dialog<>();
-            dialog.setTitle("Enter Quantity");
-            dialog.setHeaderText("Add " + selectedBook.getTitle() + " to Cart");
+            dialog.setTitle("Add to Cart");
+            dialog.setHeaderText(null);  // Remove header text
 
-            ButtonType okButtonType = new ButtonType("OK", ButtonBar.ButtonData.OK_DONE);
-            dialog.getDialogPane().getButtonTypes().addAll(okButtonType, ButtonType.CANCEL);
+            ButtonType addButtonType = new ButtonType("Add to Cart", ButtonBar.ButtonData.OK_DONE);
+            dialog.getDialogPane().getButtonTypes().addAll(addButtonType, ButtonType.CANCEL);
 
-            GridPane grid = new GridPane();
-            grid.setHgap(10);
-            grid.setVgap(10);
-            grid.setPadding(new javafx.geometry.Insets(20, 150, 10, 10));
+            VBox content = new VBox(10);
+            content.setPadding(new Insets(20, 20, 10, 20));
 
+            Label titleLabel = new Label("Add " + selectedBook.getTitle() + " to Cart");
+            titleLabel.setStyle("-fx-font-size: 16px; -fx-font-weight: bold;");
+
+            Label quantityLabel = new Label("Quantity:");
             TextField quantityField = new TextField("1");
-            Button increaseBtn = new Button("+");
-            Button decreaseBtn = new Button("-");
+            quantityField.setPrefWidth(50);
+            quantityField.setStyle("-fx-alignment: center;");
 
-            increaseBtn.setOnAction(e -> incrementQuantity(quantityField));
-            decreaseBtn.setOnAction(e -> decrementQuantity(quantityField));
+            Button decreaseBtn = new Button("-");
+            Button increaseBtn = new Button("+");
 
             HBox quantityBox = new HBox(5, decreaseBtn, quantityField, increaseBtn);
             quantityBox.setAlignment(Pos.CENTER);
 
-            grid.add(new Label("Quantity:"), 0, 0);
-            grid.add(quantityBox, 1, 0);
+            content.getChildren().addAll(titleLabel, quantityLabel, quantityBox);
 
-            dialog.getDialogPane().setContent(grid);
+            // Style the dialog
+            dialog.getDialogPane().setContent(content);
+            dialog.getDialogPane().setPrefWidth(300);
+
+            // Quantity buttons functionality
+            increaseBtn.setOnAction(e -> incrementQuantity(quantityField));
+            decreaseBtn.setOnAction(e -> decrementQuantity(quantityField));
 
             dialog.setResultConverter(dialogButton -> {
-                if (dialogButton == okButtonType) {
+                if (dialogButton == addButtonType) {
                     try {
                         return Integer.parseInt(quantityField.getText());
                     } catch (NumberFormatException e) {

@@ -32,16 +32,15 @@
     <center>
         <VBox alignment="TOP_CENTER" spacing="10" style="-fx-padding: 20;">
             <TableView fx:id="booksTable" prefHeight="500" prefWidth="850">
-                <columns>
-                    <TableColumn fx:id="titleCol" text="Title" prefWidth="200"/>
-                    <TableColumn fx:id="authorCol" text="Author" prefWidth="200"/>
-                    <TableColumn fx:id="priceCol" text="Price" prefWidth="100"/>
-                    <TableColumn fx:id="stockCol" text="Stock" prefWidth="100"/>
-                    <TableColumn fx:id="soldCol" text="Sold Copies" prefWidth="100"/>
-                    <!-- New column for Delete button and stock adjustment -->
-                    <TableColumn fx:id="actionCol" text="Actions" prefWidth="150" visible="false"/>
-                </columns>
-            </TableView>
+			    <columns>
+			        <TableColumn fx:id="titleCol" text="Title" prefWidth="230"/>
+			        <TableColumn fx:id="authorCol" text="Author" prefWidth="150"/>
+			        <TableColumn fx:id="priceCol" text="Price" prefWidth="100"/>
+			        <TableColumn fx:id="stockCol" text="Stock" prefWidth="120"/>
+			        <TableColumn fx:id="soldCol" text="Sold Copies" prefWidth="100"/>
+			        <TableColumn fx:id="actionCol" text="Actions" prefWidth="120"/>
+			    </columns>
+			</TableView>
         </VBox>
     </center>
 

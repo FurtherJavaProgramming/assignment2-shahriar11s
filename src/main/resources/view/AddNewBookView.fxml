@@ -1,20 +1,30 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.control.Button?>
-<?import javafx.scene.control.Label?>
-<?import javafx.scene.control.TextField?>
-<?import javafx.scene.layout.HBox?>
-<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
 
-<VBox xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" spacing="10" alignment="CENTER" style="-fx-padding: 20;">
-    <Label text="Add New Book" style="-fx-font-size: 20px;"/>
-    <TextField fx:id="titleField" promptText="Title" />
-    <TextField fx:id="authorField" promptText="Author" />
-    <TextField fx:id="priceField" promptText="Price" />
-    <TextField fx:id="stockField" promptText="Stock" />
-
-    <HBox spacing="10" alignment="CENTER">
-        <Button fx:id="addBookBtn" text="Add" />
-        <Button fx:id="cancelBtn" text="Cancel" />
+<VBox xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" 
+      spacing="15" alignment="CENTER" style="-fx-background-color: #f4f4f4; -fx-padding: 20;">
+    
+    <Label text="Add New Book" style="-fx-font-size: 24px; -fx-font-weight: bold; -fx-text-fill: #333333;"/>
+    
+    <GridPane vgap="10" hgap="10">
+        <Label text="Title:" GridPane.columnIndex="0" GridPane.rowIndex="0"/>
+        <TextField fx:id="titleField" GridPane.columnIndex="1" GridPane.rowIndex="0" prefWidth="250"/>
+        
+        <Label text="Author:" GridPane.columnIndex="0" GridPane.rowIndex="1"/>
+        <TextField fx:id="authorField" GridPane.columnIndex="1" GridPane.rowIndex="1"/>
+        
+        <Label text="Price:" GridPane.columnIndex="0" GridPane.rowIndex="2"/>
+        <TextField fx:id="priceField" GridPane.columnIndex="1" GridPane.rowIndex="2"/>
+        
+        <Label text="Stock:" GridPane.columnIndex="0" GridPane.rowIndex="3"/>
+        <TextField fx:id="stockField" GridPane.columnIndex="1" GridPane.rowIndex="3"/>
+    </GridPane>
+    
+    <HBox spacing="15" alignment="CENTER">
+        <Button fx:id="addBookBtn" text="Add Book" style="-fx-background-color: #4CAF50; -fx-text-fill: white; -fx-font-weight: bold;"/>
+        <Button fx:id="cancelBtn" text="Cancel" style="-fx-background-color: #f44336; -fx-text-fill: white; -fx-font-weight: bold;"/>
     </HBox>
 </VBox>

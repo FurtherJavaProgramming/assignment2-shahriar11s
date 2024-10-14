@@ -13,21 +13,14 @@ import dao.BookDao;
 
 public class AddNewBookController {
 
-    @FXML
-    private TextField titleField;
-    @FXML
-    private TextField authorField;
-    @FXML
-    private TextField priceField;
-    @FXML
-    private TextField stockField;
+    @FXML private TextField titleField;
+    @FXML private TextField authorField;
+    @FXML private TextField priceField;
+    @FXML private TextField stockField;
+    @FXML private Button addBookBtn;
+    @FXML private Button cancelBtn;
 
-    @FXML
-    private Button addBookBtn;
-    @FXML
-    private Button cancelBtn;
-
-    private Stage stage;  // To hold the new stage instance
+    private Stage stage;
     private Model model;
 
     public AddNewBookController(Stage stage, Model model) {
@@ -36,56 +29,74 @@ public class AddNewBookController {
     }
 
     public void setStage(Stage stage) {
-        this.stage = stage;  // Setter to set the stage from outside
+        this.stage = stage;
     }
 
     @FXML
     public void initialize() {
-        // Handle the Add Book button action
-    	addBookBtn.setOnAction(event -> {
-            if (isValidInput()) {
-                int newBookId = BookDao.getHighestBookId() + 1;
-                Book newBook = new Book(newBookId, 
-                                        titleField.getText(), 
-                                        authorField.getText(),
-                                        Double.parseDouble(priceField.getText()), 
-                                        Integer.parseInt(stockField.getText()), 
-                                        0);
+        addBookBtn.setOnAction(event -> addBook());
+        cancelBtn.setOnAction(event -> stage.close());
 
-                BookDao.addNewBook(newBook);
-                
-                // Update the stock in the main books table
-                BookDao.updateBookStock(newBook);
-
-                clearForm();
-                stage.close();
-            } else {
-                showAlert("Invalid Input", "Please fill in all fields with valid data.");
+        // Add listeners to validate input as user types
+        priceField.textProperty().addListener((observable, oldValue, newValue) -> {
+            if (!newValue.matches("\\d*(\\.\\d{0,2})?")) {
+                priceField.setText(oldValue);
             }
         });
 
-        // Handle the Cancel button action
-        cancelBtn.setOnAction(event -> stage.close());
+        stockField.textProperty().addListener((observable, oldValue, newValue) -> {
+            if (!newValue.matches("\\d*")) {
+                stockField.setText(oldValue);
+            }
+        });
     }
 
-    // Method to check if the user input is valid
-    private boolean isValidInput() {
-        try {
-            // Parse price and stock fields to ensure they are valid numbers
-            Double.parseDouble(priceField.getText());
-            Integer.parseInt(stockField.getText());
+    private void addBook() {
+        if (isValidInput()) {
+            int newBookId = BookDao.getHighestBookId() + 1;
+            Book newBook = new Book(newBookId, 
+                                    titleField.getText().trim(), 
+                                    authorField.getText().trim(),
+                                    Double.parseDouble(priceField.getText()), 
+                                    Integer.parseInt(stockField.getText()), 
+                                    0);
 
-            // Check if title, author, price, and stock fields are not empty
-            return !titleField.getText().isEmpty() &&
-                   !authorField.getText().isEmpty() &&
-                   !priceField.getText().isEmpty() &&
-                   !stockField.getText().isEmpty();
-        } catch (NumberFormatException e) {
-            return false;  // Return false if parsing fails
+            BookDao.addNewBook(newBook);
+            BookDao.updateBookStock(newBook);
+
+            showAlert("Success", "Book added successfully!", Alert.AlertType.INFORMATION);
+            clearForm();
+            stage.close();
+        } else {
+            showAlert("Invalid Input", "Please fill in all fields with valid data.", Alert.AlertType.ERROR);
         }
     }
 
-    // Method to clear the form fields after adding a book
+    private boolean isValidInput() {
+        return !titleField.getText().trim().isEmpty() &&
+               !authorField.getText().trim().isEmpty() &&
+               isValidPrice(priceField.getText()) &&
+               isValidStock(stockField.getText());
+    }
+
+    private boolean isValidPrice(String price) {
+        try {
+            double value = Double.parseDouble(price);
+            return value > 0;
+        } catch (NumberFormatException e) {
+            return false;
+        }
+    }
+
+    private boolean isValidStock(String stock) {
+        try {
+            int value = Integer.parseInt(stock);
+            return value >= 0;
+        } catch (NumberFormatException e) {
+            return false;
+        }
+    }
+
     private void clearForm() {
         titleField.clear();
         authorField.clear();
@@ -93,16 +104,14 @@ public class AddNewBookController {
         stockField.clear();
     }
 
-    // Method to show an information alert
-    private void showAlert(String title, String message) {
-        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+    private void showAlert(String title, String message, Alert.AlertType alertType) {
+        Alert alert = new Alert(alertType);
         alert.setTitle(title);
         alert.setHeaderText(null);
         alert.setContentText(message);
         alert.showAndWait();
     }
 
-    // Method to show the Add New Book window (stage)
     public void showStage(Pane root) {
         Scene scene = new Scene(root, 400, 300);
         stage.setScene(scene);

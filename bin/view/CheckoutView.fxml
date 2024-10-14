@@ -6,66 +6,51 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Text?>
+<?import javafx.scene.layout.Region?>
 
-<VBox alignment="TOP_LEFT" spacing="10" xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml">
+<VBox alignment="TOP_CENTER" spacing="20" style="-fx-background-color: #f4f4f4;" xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml">
     <padding>
-        <Insets top="20" bottom="20" left="20" right="20"/>
+        <Insets top="30" bottom="30" left="40" right="40"/>
     </padding>
 
-    <!-- Back Button -->
-    <HBox alignment="CENTER_LEFT" spacing="10" prefWidth="870.0">
-        <Button fx:id="goBackBtn" text="Go Back" />
+    <HBox alignment="CENTER_LEFT" spacing="10" prefWidth="800">
+        <Button fx:id="goBackBtn" text="Go Back" style="-fx-background-color: #007bff; -fx-text-fill: white;"/>
     </HBox>
 
-    <!-- Order Summary Title -->
-    <HBox alignment="CENTER" spacing="10">
-        <Label text="Order Summary" style="-fx-font-size: 24px; -fx-font-weight: bold;" />
-    </HBox>
+    <Label text="Order Summary" style="-fx-font-size: 28px; -fx-font-weight: bold;"/>
 
-    <!-- Book Details -->
-    <HBox alignment="CENTER" spacing="10" style="-fx-padding: 0;">
-        <Text fx:id="bookSummaryText" style="-fx-font-size: 18px;" />
-    </HBox>
+    <VBox style="-fx-background-color: white; -fx-padding: 20; -fx-background-radius: 5;" maxWidth="600">
+        <Text fx:id="bookSummaryText" style="-fx-font-size: 16px;"/>
+    </VBox>
 
-    <!-- Separator (Removed extra padding) -->
-    <HBox alignment="CENTER" spacing="10" style="-fx-padding: 0;">
-        <Text text="--------------------------------------------" style="-fx-font-size: 16px;" />
-    </HBox>
+    <Region prefHeight="20"/>
 
-    <!-- Pricing Information -->
-    <VBox alignment="CENTER" spacing="5"> <!-- Reduced spacing here -->
-        <!-- Subtotal -->
-        <HBox alignment="CENTER" spacing="50">
-            <Label text="Subtotal:" style="-fx-font-size: 18px;" />
-            <Label fx:id="subtotalLabel" style="-fx-font-size: 18px; -fx-font-weight: bold;" />
+    <VBox style="-fx-background-color: white; -fx-padding: 20; -fx-background-radius: 5;" maxWidth="600">
+        <HBox alignment="CENTER_LEFT" spacing="10">
+            <Label text="Subtotal:" style="-fx-font-size: 16px;"/>
+            <Region HBox.hgrow="ALWAYS"/>
+            <Label fx:id="subtotalLabel" style="-fx-font-size: 16px; -fx-font-weight: bold;"/>
         </HBox>
-
-        <!-- Tax -->
-        <HBox alignment="CENTER" spacing="50">
-            <Label text="Tax (10% GST):" style="-fx-font-size: 18px;" />
-            <Label fx:id="taxLabel" style="-fx-font-size: 18px; -fx-font-weight: bold;" />
+        <HBox alignment="CENTER_LEFT" spacing="10">
+            <Label text="Tax (10% GST):" style="-fx-font-size: 16px;"/>
+            <Region HBox.hgrow="ALWAYS"/>
+            <Label fx:id="taxLabel" style="-fx-font-size: 16px; -fx-font-weight: bold;"/>
         </HBox>
-
-        <!-- Delivery Charge -->
-        <HBox alignment="CENTER" spacing="50">
-            <Label text="Delivery Charge:" style="-fx-font-size: 18px;" />
-            <Label fx:id="deliveryChargeLabel" style="-fx-font-size: 18px; -fx-font-weight: bold;" />
+        <HBox alignment="CENTER_LEFT" spacing="10">
+            <Label text="Delivery Charge:" style="-fx-font-size: 16px;"/>
+            <Region HBox.hgrow="ALWAYS"/>
+            <Label fx:id="deliveryChargeLabel" style="-fx-font-size: 16px; -fx-font-weight: bold;"/>
         </HBox>
-
-        <!-- Total -->
-        <HBox alignment="CENTER" spacing="50">
-            <Label text="Total:" style="-fx-font-size: 18px;" />
-            <Label fx:id="totalLabel" style="-fx-font-size: 18px; -fx-font-weight: bold;" />
+        <Region prefHeight="10"/>
+        <HBox alignment="CENTER_LEFT" spacing="10" style="-fx-border-color: #ddd; -fx-border-width: 1 0 0 0; -fx-padding: 10 0 0 0;">
+            <Label text="Total:" style="-fx-font-size: 18px; -fx-font-weight: bold;"/>
+            <Region HBox.hgrow="ALWAYS"/>
+            <Label fx:id="totalLabel" style="-fx-font-size: 18px; -fx-font-weight: bold; -fx-text-fill: #007bff;"/>
         </HBox>
     </VBox>
 
-    <!-- Separator -->
-    <HBox alignment="CENTER" spacing="10" style="-fx-padding: 0;">
-        <Text text="--------------------------------------------" style="-fx-font-size: 16px;" />
-    </HBox>
+    <Region prefHeight="20"/>
 
-    <!-- Proceed to Payment Button -->
-    <HBox alignment="CENTER" spacing="10" style="-fx-padding: 10;">
-        <Button fx:id="proceedPaymentBtn" text="Proceed to Payment" style="-fx-background-color: green; -fx-text-fill: white;" />
-    </HBox>
+    <Button fx:id="proceedPaymentBtn" text="Proceed to Payment" 
+            style="-fx-background-color: #28a745; -fx-text-fill: white; -fx-padding: 5 10;"/>
 </VBox>

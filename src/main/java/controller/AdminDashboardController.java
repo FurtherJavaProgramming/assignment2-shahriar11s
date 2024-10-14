@@ -57,9 +57,9 @@ public class AdminDashboardController {
         // Set welcome message
         if (currentUser != null) {
             String firstName = currentUser.getFirstName();
-            adminWelcomeLabel.setText("Welcome, Admin " + firstName + "!");
+            adminWelcomeLabel.setText("Welcome,  " + firstName + "!");
         } else {
-            adminWelcomeLabel.setText("Welcome, Admin!");
+            adminWelcomeLabel.setText("Welcome!");
         }
 
         // Bind table columns

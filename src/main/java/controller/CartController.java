@@ -65,6 +65,24 @@ public class CartController {
         authorCol.setCellValueFactory(new PropertyValueFactory<>("author"));
         priceCol.setCellValueFactory(new PropertyValueFactory<>("price"));
 
+        // Center-align Unit Price column
+        priceCol.setStyle("-fx-alignment: CENTER;");
+        priceCol.setCellFactory(column -> new TableCell<Book, Double>() {
+            @Override
+            protected void updateItem(Double price, boolean empty) {
+                super.updateItem(price, empty);
+                if (empty || price == null) {
+                    setText(null);
+                } else {
+                    setText(String.format("%.2f", price));
+                    setAlignment(javafx.geometry.Pos.CENTER);
+                }
+            }
+        });
+
+        // Center-align Action column
+        actionCol.setStyle("-fx-alignment: CENTER;");
+
         ObservableList<Book> cartItems = FXCollections.observableArrayList(cart.keySet());
         cartTable.setItems(cartItems);
 

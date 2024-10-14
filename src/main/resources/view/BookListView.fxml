@@ -27,11 +27,11 @@
     <TableView fx:id="bookTable" VBox.vgrow="ALWAYS">
         <columns>
             <TableColumn fx:id="idCol" text="ID" prefWidth="60.0" />
-            <TableColumn fx:id="titleCol" text="Title" prefWidth="200.0" />
+            <TableColumn fx:id="titleCol" text="Title" prefWidth="285.0" />
             <TableColumn fx:id="authorCol" text="Author" prefWidth="150.0" />
             <TableColumn fx:id="priceCol" text="Price (AUD)" prefWidth="100.0" />
-            <TableColumn fx:id="stockCol" text="Physical Copies" prefWidth="150.0" />
-            <TableColumn fx:id="soldCol" text="Sold Copies" prefWidth="150.0" />
+            <TableColumn fx:id="stockCol" text="Physical Copies" prefWidth="140.0" />
+            <TableColumn fx:id="soldCol" text="Sold Copies" prefWidth="140.0" />
         </columns>
     </TableView>
 </VBox>

@@ -67,12 +67,57 @@ public class BookListController {
     @FXML
     public void initialize() {
         // Set up table columns
-        idCol.setCellValueFactory(new PropertyValueFactory<>("id"));
-        titleCol.setCellValueFactory(new PropertyValueFactory<>("title"));
+    	idCol.setVisible(false);
+    	titleCol.setCellValueFactory(new PropertyValueFactory<>("title"));
         authorCol.setCellValueFactory(new PropertyValueFactory<>("author"));
         priceCol.setCellValueFactory(new PropertyValueFactory<>("price"));
         stockCol.setCellValueFactory(new PropertyValueFactory<>("stock"));
         soldCol.setCellValueFactory(new PropertyValueFactory<>("sold"));
+
+        // Center-align Price, Physical Copies, and Sold Copies columns
+        priceCol.setStyle("-fx-alignment: CENTER;");
+        stockCol.setStyle("-fx-alignment: CENTER;");
+        soldCol.setStyle("-fx-alignment: CENTER;");
+
+        // Custom cell factories for center alignment and formatting
+        priceCol.setCellFactory(column -> new javafx.scene.control.TableCell<Book, Double>() {
+            @Override
+            protected void updateItem(Double price, boolean empty) {
+                super.updateItem(price, empty);
+                if (empty || price == null) {
+                    setText(null);
+                } else {
+                    setText(String.format("%.2f", price));
+                    setAlignment(javafx.geometry.Pos.CENTER);
+                }
+            }
+        });
+
+        stockCol.setCellFactory(column -> new javafx.scene.control.TableCell<Book, Integer>() {
+            @Override
+            protected void updateItem(Integer stock, boolean empty) {
+                super.updateItem(stock, empty);
+                if (empty || stock == null) {
+                    setText(null);
+                } else {
+                    setText(stock.toString());
+                    setAlignment(javafx.geometry.Pos.CENTER);
+                }
+            }
+        });
+
+        soldCol.setCellFactory(column -> new javafx.scene.control.TableCell<Book, Integer>() {
+            @Override
+            protected void updateItem(Integer sold, boolean empty) {
+                super.updateItem(sold, empty);
+                if (empty || sold == null) {
+                    setText(null);
+                } else {
+                    setText(sold.toString());
+                    setAlignment(javafx.geometry.Pos.CENTER);
+                }
+            }
+        });
 
         // Fetch the books and display them in the table
         ObservableList<Book> bookList = FXCollections.observableArrayList(BookDao.getAllBooks());

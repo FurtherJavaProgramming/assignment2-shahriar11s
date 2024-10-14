@@ -78,6 +78,13 @@ public class AdminBooksController {
         addNewBookBtn.setOnAction(event -> handleAddNewBook());
 
         booksToDelete = new HashSet<>();
+
+        // Set alignment for columns in normal view
+        titleCol.setStyle("-fx-alignment: CENTER-LEFT;");
+        authorCol.setStyle("-fx-alignment: CENTER-LEFT;");
+        priceCol.setStyle("-fx-alignment: CENTER;");
+        stockCol.setStyle("-fx-alignment: CENTER;");
+        soldCol.setStyle("-fx-alignment: CENTER;");
     }
 
     private void setupRefreshTimeline() {
@@ -97,6 +104,33 @@ public class AdminBooksController {
         stockCol.setCellValueFactory(new PropertyValueFactory<>("stock"));
         soldCol.setCellValueFactory(new PropertyValueFactory<>("sold"));
 
+        // Custom cell factories for price and stock to ensure center alignment
+        priceCol.setCellFactory(tc -> new TableCell<Book, Double>() {
+            @Override
+            protected void updateItem(Double price, boolean empty) {
+                super.updateItem(price, empty);
+                if (empty || price == null) {
+                    setText(null);
+                } else {
+                    setText(String.format("%.2f", price));
+                    setAlignment(javafx.geometry.Pos.CENTER);
+                }
+            }
+        });
+
+        stockCol.setCellFactory(tc -> new TableCell<Book, Integer>() {
+            @Override
+            protected void updateItem(Integer stock, boolean empty) {
+                super.updateItem(stock, empty);
+                if (empty || stock == null) {
+                    setText(null);
+                } else {
+                    setText(stock.toString());
+                    setAlignment(javafx.geometry.Pos.CENTER);
+                }
+            }
+        });
+
         List<Book> books = BookDao.getAdminBookList();
         originalBooks = FXCollections.observableArrayList(books);
         modifiedBooks = FXCollections.observableArrayList(books);
@@ -104,7 +138,7 @@ public class AdminBooksController {
     }
 
     private void handleUpdateBooks() {
-    	isUpdating = true;
+        isUpdating = true;
         updateBooksBtn.setVisible(false);
         cancelUpdateBtn.setVisible(true);
         confirmUpdateBtn.setVisible(true);
@@ -112,8 +146,17 @@ public class AdminBooksController {
 
         stockCol.setCellFactory(tc -> new TableCell<>() {
             final HBox hbox = new HBox(5);
-            final Button increaseBtn = new Button("+");
             final Button decreaseBtn = new Button("-");
+            final Label stockLabel = new Label();
+            final Button increaseBtn = new Button("+");
+
+            {
+                hbox.setAlignment(javafx.geometry.Pos.CENTER);
+                decreaseBtn.setStyle("-fx-min-width: 30px;");
+                increaseBtn.setStyle("-fx-min-width: 30px;");
+                stockLabel.setStyle("-fx-alignment: CENTER; -fx-min-width: 30px;");
+                hbox.getChildren().addAll(decreaseBtn, stockLabel, increaseBtn);
+            }
 
             @Override
             protected void updateItem(Integer stock, boolean empty) {
@@ -121,21 +164,20 @@ public class AdminBooksController {
                 if (empty || stock == null) {
                     setGraphic(null);
                 } else {
-                    hbox.getChildren().clear();
-                    hbox.getChildren().addAll(decreaseBtn, new Label(stock.toString()), increaseBtn);
+                    stockLabel.setText(stock.toString());
                     setGraphic(hbox);
 
                     increaseBtn.setOnAction(e -> {
                         Book book = getTableView().getItems().get(getIndex());
                         book.setStock(book.getStock() + 1);
-                        getTableView().refresh();
+                        stockLabel.setText(String.valueOf(book.getStock()));
                     });
 
                     decreaseBtn.setOnAction(e -> {
                         Book book = getTableView().getItems().get(getIndex());
                         if (book.getStock() > 0) {
                             book.setStock(book.getStock() - 1);
-                            getTableView().refresh();
+                            stockLabel.setText(String.valueOf(book.getStock()));
                         }
                     });
                 }
@@ -146,11 +188,7 @@ public class AdminBooksController {
             private final Button deleteButton = new Button("Delete");
 
             {
-                deleteButton.setOnAction(e -> {
-                    Book book = getTableView().getItems().get(getIndex());
-                    modifiedBooks.remove(book);
-                    booksToDelete.add(book.getId());
-                });
+                deleteButton.setStyle("-fx-background-color: #ff4d4d; -fx-text-fill: white; -fx-min-width: 60px;");
             }
 
             @Override
@@ -159,10 +197,24 @@ public class AdminBooksController {
                 if (empty) {
                     setGraphic(null);
                 } else {
+                    setAlignment(javafx.geometry.Pos.CENTER);
                     setGraphic(deleteButton);
                 }
+
+                deleteButton.setOnAction(e -> {
+                    Book book = getTableView().getItems().get(getIndex());
+                    modifiedBooks.remove(book);
+                    booksToDelete.add(book.getId());
+                    getTableView().refresh();
+                });
             }
         });
+
+        // Set alignment for other columns
+        titleCol.setStyle("-fx-alignment: CENTER-LEFT;");
+        authorCol.setStyle("-fx-alignment: CENTER-LEFT;");
+        priceCol.setStyle("-fx-alignment: CENTER-RIGHT;");
+        soldCol.setStyle("-fx-alignment: CENTER;");
     }
 
     private void handleCancelUpdate() {

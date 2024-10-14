@@ -38,10 +38,10 @@
     <TableView fx:id="bookTable" VBox.vgrow="ALWAYS">
         <columns>
             <TableColumn fx:id="idCol" text="ID" prefWidth="60.0" />
-            <TableColumn fx:id="titleCol" text="Title" prefWidth="290.0" />
-            <TableColumn fx:id="authorCol" text="Author" prefWidth="210.0" />
-            <TableColumn fx:id="priceCol" text="Price (AUD)" prefWidth="115.0" />
-            <TableColumn fx:id="stockCol" text="Available Stock" prefWidth="150" />
+            <TableColumn fx:id="titleCol" text="Title" prefWidth="315.0" />
+            <TableColumn fx:id="authorCol" text="Author" prefWidth="220.0" />
+            <TableColumn fx:id="priceCol" text="Price (AUD)" prefWidth="130.0" />
+            <TableColumn fx:id="stockCol" text="Available Stock" prefWidth="160" />
         </columns>
     </TableView>
 
