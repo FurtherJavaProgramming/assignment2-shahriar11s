@@ -3,11 +3,13 @@ package controller;
 import java.sql.SQLException;
 
 import javafx.fxml.FXML;
+import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.Pane;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
 import model.Model;
 import model.User;
@@ -131,11 +133,14 @@ public class EditProfileController {
     }
 
     public void showStage(Pane root) {
-        stage.setScene(new javafx.scene.Scene(root));
+        Scene scene = new Scene(root);
+        stage.setScene(scene);
         stage.setResizable(false);
         stage.setTitle("Edit Profile");
+        stage.initModality(Modality.APPLICATION_MODAL);
+        stage.initOwner(stage.getOwner()); // This will make it modal to its parent
         WindowManager.addWindow(stage);
         stage.setOnCloseRequest(event -> WindowManager.removeWindow(stage));
-        stage.show(); 
+        stage.showAndWait();
     }
 }

@@ -42,10 +42,12 @@ public class OrderListController {
     private Button exportButton; // New export button
 
     private Stage stage;
+    private Stage parentStage;
     private User currentUser;
 
-    public OrderListController(Stage stage, User currentUser) {
+    public OrderListController(Stage stage, Stage parentStage, User currentUser) {
         this.stage = stage;
+        this.parentStage = parentStage;
         this.currentUser = currentUser;
         System.out.println("OrderListController created with user: " + (currentUser != null ? currentUser.getUsername() : "null"));
     }
@@ -192,6 +194,10 @@ public class OrderListController {
     @FXML
     private void handleClose() {
         stage.close();
+        // Show the Home view
+        if (parentStage != null) {
+            parentStage.show();
+        }
     }
 
     public void showStage(Pane root) {
@@ -200,8 +206,16 @@ public class OrderListController {
         stage.setResizable(false);
         stage.setTitle("Order History");
         WindowManager.addWindow(stage);
-        stage.setOnCloseRequest(event -> WindowManager.removeWindow(stage));
+        stage.setOnCloseRequest(event -> {
+            WindowManager.removeWindow(stage);
+            if (parentStage != null) {
+                parentStage.show();
+            }
+        });
         stage.show();
+        if (parentStage != null) {
+            parentStage.hide();
+        }
     }
 
     // Utility function to show alerts

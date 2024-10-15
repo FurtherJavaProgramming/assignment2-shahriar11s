@@ -188,7 +188,9 @@ public class HomeController {
         updateProfile.setOnAction(event -> {
             try {
                 FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/EditProfileView.fxml"));
-                EditProfileController editProfileController = new EditProfileController(new Stage(), model);
+                Stage editProfileStage = new Stage();
+                editProfileStage.initOwner(this.stage); // Set the owner to the current stage
+                EditProfileController editProfileController = new EditProfileController(editProfileStage, model);
                 loader.setController(editProfileController);
 
                 Pane root = loader.load();
@@ -205,7 +207,7 @@ public class HomeController {
                 FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/OrderListView.fxml"));
                 
                 // Create the controller and set it before loading the FXML
-                OrderListController orderListController = new OrderListController(new Stage(), currentUser);
+                OrderListController orderListController = new OrderListController(new Stage(), this.stage, currentUser);
                 loader.setController(orderListController);
                 
                 Pane root = loader.load();
